@@ -5,7 +5,7 @@
     <data>
         <variable
             name="wifiScannerState"
-            type="com.nstu.geolocationwificlient.data.WifiScannerState" />
+            type="com.nstu.geolocationwificlient.wifi.scanner.WifiScannerState" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat

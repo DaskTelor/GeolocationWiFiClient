@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
-import com.nstu.geolocationwificlient.data.WifiScannerState;
+import com.nstu.geolocationwificlient.wifi.scanner.WifiScannerState;
 import com.nstu.geolocationwificlient.databinding.ActivityMainBinding;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 

@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.data;
+package com.nstu.geolocationwificlient.wifi.scanner;
 
 import androidx.databinding.ObservableBoolean;
 
