@@ -16,10 +16,6 @@ public class Wifi {
         this.level = level;
     }
 
-    private void updateLevel(int level){
-        this.level = level;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -35,8 +31,8 @@ public class Wifi {
     @NonNull
     @Override
     public String toString() {
-        return "{title: " + this.title + ";"
-                + "security: " + this.security + ";"
-                + "level: " + this.level + "}";
+        return "{title:" + this.title + ";"
+                + "security:" + this.security + ";"
+                + "level:" + this.level + "}";
     }
 }

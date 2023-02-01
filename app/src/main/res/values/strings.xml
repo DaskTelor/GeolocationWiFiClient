@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">GeolocationWiFiClient</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_text_start">Start Scanning</string>
+    <string name="button_text_stop">Stop Scanning</string>
+    <string name="name_of_wifi">Name: %s</string>
+    <string name="security_of_wifi">Type of security: %s</string>
+    <string name="level_of_wifi">Level: %s</string>
 </resources>

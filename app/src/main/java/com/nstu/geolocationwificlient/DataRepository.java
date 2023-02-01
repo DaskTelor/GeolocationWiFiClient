@@ -1,18 +1,17 @@
 package com.nstu.geolocationwificlient;
 
-import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
-import androidx.lifecycle.Observer;
 
 import com.nstu.geolocationwificlient.data.Wifi;
+import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 import java.util.List;
 
 public class DataRepository {
 
     // Singleton instance
-    private static volatile DataRepository instance;
+    private static DataRepository instance;
 
     private static WifiScanner wifiScanner;
     private final MediatorLiveData<List<Wifi>> observableData;
@@ -23,7 +22,7 @@ public class DataRepository {
 
         observableData.addSource(DataRepository.wifiScanner.loadAll(),
                 wifiList -> {
-            observableData.postValue(wifiList);
+            observableData.setValue(wifiList);
         });
     }
 
