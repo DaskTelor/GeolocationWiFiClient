@@ -2,26 +2,30 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-    <data/>
+    <data>
+        <variable
+            name="wifiScannerState"
+            type="com.nstu.geolocationwificlient.wifi.scanner.WifiScannerState" />
+    </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-            <androidx.fragment.app.FragmentContainerView
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/fragment_container"
-                android:layout_weight="9"
-                android:name="com.nstu.geolocationwificlient.ui.wifilist.WifiListFragment"
-                tools:layout="@layout/fragment_wifi_list">
-            </androidx.fragment.app.FragmentContainerView>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:id="@+id/buttonUpdate"
-                android:layout_weight="1"
-                android:text="Button Update"
-                android:layout_margin="10dp"/>
+        <fragment
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="9"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/main_graph" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:id="@+id/buttonUpdate"
+            android:layout_weight="1"
+            android:text="@{!wifiScannerState.isRunningObservable?String.format(@string/button_text_start):String.format(@string/button_text_stop)}"
+            android:layout_margin="10dp"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

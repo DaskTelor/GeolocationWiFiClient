@@ -6,9 +6,28 @@
             name="wifi"
             type="com.nstu.geolocationwificlient.data.Wifi" />
     </data>
-    <TextView
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@{wifi.toString()}"
-        android:textSize="22sp"/>
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@{@string/name_of_wifi(wifi.title)}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@{@string/level_of_wifi(wifi.level)}" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@{@string/security_of_wifi(wifi.security)}" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

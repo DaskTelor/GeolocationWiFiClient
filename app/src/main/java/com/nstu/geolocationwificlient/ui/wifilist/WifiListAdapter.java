@@ -1,5 +1,6 @@
 package com.nstu.geolocationwificlient.ui.wifilist;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -17,13 +18,12 @@ import java.util.List;
 public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHolder>{
     private final List<Wifi> items = new LinkedList<>();
 
-    //TODO: Try to rework with more efficient method
-
-    //неэффективный метод для полной замены существующего списка
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Wifi> data) {
         items.clear();
         items.addAll(data);
-        notifyDataSetChanged();
+        //TODO: Try to rework with more efficient method
+        this.notifyDataSetChanged();
     }
 
     @NonNull
@@ -31,34 +31,29 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
     public WifiHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        //создаем объект байндинга для элемента списка
         WifiItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.wifi_item, parent, false);
 
         return new WifiHolder(binding);
     }
-    //Отображаем объект на position
+
     @Override
     public void onBindViewHolder(@NonNull WifiHolder holder, int position) {
         holder.bind(items.get(position));
     }
 
-    //получаем количество всех элементов
     @Override
     public int getItemCount() {
         return items.size();
     }
 
-    //Объект который будет отображать видимые элементы
     static class WifiHolder extends RecyclerView.ViewHolder{
         WifiItemBinding binding;
-
 
         public WifiHolder(@NonNull WifiItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        //бинд конкретного элемента в данном случае с помощью DataBinding
         public void bind(Wifi wifi) {
             binding.setWifi(wifi);
             binding.executePendingBindings();
