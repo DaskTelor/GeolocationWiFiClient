@@ -36,7 +36,6 @@ public class DataRepository {
         }
         return instance;
     }
-
     public LiveData<List<Wifi>> getData() {
         return observableData;
     }

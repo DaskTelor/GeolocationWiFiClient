@@ -8,21 +8,17 @@ public class WifiScannerState {
     private WifiScannerState(){
         isRunningObservable = new ObservableBoolean(false);
     }
-    public static WifiScannerState getInstance()
-    {
+    public static WifiScannerState getInstance() {
         if(instance == null) {
-            synchronized (WifiScannerState.class)
-            {
-                if(instance == null)
-                {
+            synchronized (WifiScannerState.class) {
+                if(instance == null) {
                     instance = new WifiScannerState();
                 }
             }
         }
         return instance;
     }
-    public ObservableBoolean getIsRunningObservable()
-    {
+    public ObservableBoolean getIsRunningObservable() {
         return isRunningObservable;
     }
 }

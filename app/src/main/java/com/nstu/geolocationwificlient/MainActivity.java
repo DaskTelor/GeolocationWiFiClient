@@ -15,7 +15,9 @@ import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 public class MainActivity extends AppCompatActivity{
     private final int REQUEST_CODE_PERMISSION_WIFI_STATE = 1;
-    private final int REQUEST_CODE_PERMISSION_FINE_LOCATION = 1;
+    private final int REQUEST_CODE_PERMISSION_FINE_LOCATION = 2;
+    private final int REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE = 3;
+
     private Thread threadUpdateWifiList;
     private ActivityMainBinding binding;
     @Override
@@ -31,8 +33,12 @@ public class MainActivity extends AppCompatActivity{
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_WIFI_STATE}, REQUEST_CODE_PERMISSION_WIFI_STATE);
         }
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CHANGE_WIFI_STATE}, REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE);
+        }
 
         binding.buttonUpdate.setOnClickListener(view -> {
+
             if(WifiScannerState.getInstance().getIsRunningObservable().get()){
                 WifiScannerState.getInstance().getIsRunningObservable().set(false);
                 threadUpdateWifiList.interrupt();
