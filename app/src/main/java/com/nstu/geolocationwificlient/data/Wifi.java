@@ -3,25 +3,25 @@ package com.nstu.geolocationwificlient.data;
 import androidx.annotation.NonNull;
 
 public class Wifi {
-    private final String title;
-    private final String security;
+    private final String ssid;
+    private final String bssid;
     private int level;
 
     public Wifi() {
-        this("WiFi", "Strong", 0);
+        this("SSID", "BSSID", 0);
     }
-    public Wifi(String title, String security, int level) {
-        this.title = title;
-        this.security = security;
+    public Wifi(String ssid,String bssid, int level) {
+        this.ssid = ssid;
+        this.bssid = bssid;
         this.level = level;
     }
 
-    public String getTitle() {
-        return title;
+    public String getSSID() {
+        return ssid;
     }
 
-    public String getSecurity() {
-        return security;
+    public String getBSSID() {
+        return bssid;
     }
 
     public int getLevel() {
@@ -31,8 +31,8 @@ public class Wifi {
     @NonNull
     @Override
     public String toString() {
-        return "{title:" + this.title + ";"
-                + "security:" + this.security + ";"
+        return "{SSID:" + this.ssid + ";"
+                + "BSSID:" + this.bssid + ";"
                 + "level:" + this.level + "}";
     }
 }

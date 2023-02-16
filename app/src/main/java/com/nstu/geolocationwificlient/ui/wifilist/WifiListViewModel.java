@@ -2,6 +2,8 @@ package com.nstu.geolocationwificlient.ui.wifilist;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,9 @@ public class WifiListViewModel extends AndroidViewModel {
                         getSystemService(Context.WIFI_SERVICE));
 
         DataRepository repository = DataRepository.getInstance(wifiScanner);
+
+        IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+        getApplication().registerReceiver(WifiScanner.getInstance(), intentFilter);
 
         this.wifiList = repository.getData();
     }

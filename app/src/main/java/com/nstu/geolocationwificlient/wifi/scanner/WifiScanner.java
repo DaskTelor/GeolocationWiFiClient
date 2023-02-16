@@ -41,15 +41,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-/*        String action = intent.getAction();//Метод getAction(),для поиска действий, связанных с намерением. Считываем действие
+        Log.d("WifiScanner", "onReceive()");
 
-        ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);//Получаем объект класса ConnectivityManager, который следит за состоянием сети
-        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();//Получаем объект класса NetworkInfo для получения описания состояния сети
-
-        if (activeNetwork != null &&  activeNetwork.isConnectedOrConnecting())
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI){
-
-            }*/
+        updateScanResults();
+        this.wifiList.postValue(mWifiList);
     }
 
     public static WifiScanner getInstance() {
@@ -72,14 +67,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
             instance.wifiManager = wifiManager;
         }
     }
-    private void startScan() {
-        wifiManager.startScan();
-    }
-    private void update() {
+    private void updateScanResults() {
         Log.d("WifiScanner", "start update");
         synchronized (WifiScanner.class) {
             List<ScanResult> scanResults;
-
             try {
                 scanResults = wifiManager.getScanResults();
             }catch (SecurityException securityException){
@@ -88,21 +79,19 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
             }
             mWifiList.clear();
             for (ScanResult scanResult : scanResults) {
-                mWifiList.add(new Wifi(scanResult.SSID, scanResult.toString(), scanResult.level));
+                mWifiList.add(new Wifi(scanResult.SSID, scanResult.BSSID, scanResult.level));
             }
         }
-        wifiList.postValue(mWifiList);
+
         Log.d("WifiScanner", "success update");
     }
     @Override
     public void run() {
         while(!Thread.currentThread().isInterrupted()) {
-            this.update();
+            wifiManager.startScan();
             try {
                 Thread.sleep(delay);
             } catch (InterruptedException e) {
-                this.mWifiList.clear();
-                this.wifiList.postValue(mWifiList);
                 break;
             }
         }

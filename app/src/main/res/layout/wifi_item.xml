@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@{@string/name_of_wifi(wifi.title)}"/>
+            android:text="@{@string/ssid_wifi(wifi.SSID)}"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -28,6 +28,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@{@string/security_of_wifi(wifi.security)}" />
+            android:text="@{@string/bssid_wifi(wifi.BSSID)}" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

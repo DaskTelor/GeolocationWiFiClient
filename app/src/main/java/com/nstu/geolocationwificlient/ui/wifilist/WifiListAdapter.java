@@ -11,18 +11,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.data.Wifi;
 import com.nstu.geolocationwificlient.databinding.WifiItemBinding;
+import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHolder>{
-    private final List<Wifi> items = new LinkedList<>();
+    private final List<Wifi> mItems = new LinkedList<>();
+    private WifiSortType mSortType = WifiSortType.LEVEL;
+    private boolean mSortByAscending = false;
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Wifi> data) {
-        items.clear();
-        items.addAll(data);
-        //TODO: Try to rework with more efficient method
+        switch(mSortType){
+            case SSID:
+                Collections.sort(data,
+                        (Comparator<Wifi>) (o1, o2) -> o1.getSSID().compareTo(o2.getSSID()));
+                break;
+            case BSSID:
+                Collections.sort(data,
+                        (Comparator<Wifi>) (o1, o2) -> o1.getBSSID().compareTo(o2.getBSSID()));
+                break;
+            case LEVEL:
+                Collections.sort(data,
+                        (Comparator<Wifi>) (o1, o2) -> Integer.compare(o1.getLevel(), o2.getLevel()));
+                break;
+        }
+
+        if (!mSortByAscending)
+            Collections.reverse(data);
+
+        mItems.clear();
+        mItems.addAll(data);
+
         this.notifyDataSetChanged();
     }
 
@@ -38,12 +62,12 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
 
     @Override
     public void onBindViewHolder(@NonNull WifiHolder holder, int position) {
-        holder.bind(items.get(position));
+        holder.bind(mItems.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        return  mItems.size();
     }
 
     static class WifiHolder extends RecyclerView.ViewHolder{
