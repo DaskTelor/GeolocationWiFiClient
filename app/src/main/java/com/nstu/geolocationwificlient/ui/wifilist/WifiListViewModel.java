@@ -40,4 +40,9 @@ public class WifiListViewModel extends AndroidViewModel {
     public LiveData<List<Wifi>> getWifiList() {
         return this.wifiList;
     }
+
+    @Override
+    protected void finalize ( ) {
+
+    }
 }

@@ -85,9 +85,12 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
 
         Log.d("WifiScanner", "success update");
     }
+
+
     @Override
     public void run() {
         while(!Thread.currentThread().isInterrupted()) {
+            //you need to set Developer Options > Networking > Wi-Fi scan throttling
             wifiManager.startScan();
             try {
                 Thread.sleep(delay);

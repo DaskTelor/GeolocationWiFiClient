@@ -21,7 +21,7 @@ import java.util.List;
 
 public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHolder>{
     private final List<Wifi> mItems = new LinkedList<>();
-    private WifiSortType mSortType = WifiSortType.LEVEL;
+    private WifiSortType mSortType = WifiSortType.BSSID;
     private boolean mSortByAscending = false;
 
     @SuppressLint("NotifyDataSetChanged")
