@@ -13,6 +13,7 @@ import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
+import androidx.databinding.ObservableBoolean;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -24,9 +25,9 @@ import java.util.List;
 public class WifiScanner extends BroadcastReceiver implements Runnable{
 
     // Singleton instance
-    @SuppressLint("StaticFieldLeak")
     private static WifiScanner instance;
     private WifiManager wifiManager;
+    private MutableLiveData<Boolean> isRunningLiveData;
     private final MutableLiveData<List<Wifi>> wifiList;
     private final ArrayList<Wifi> mWifiList;
     private  volatile int delay;
@@ -34,6 +35,7 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     private WifiScanner() {
         this.wifiList = new MutableLiveData<>();
         this.mWifiList = new ArrayList<>();
+        this.isRunningLiveData = new MutableLiveData<>(false);
 
         delay = 1000;
         this.wifiList.postValue(this.mWifiList);
@@ -42,7 +44,6 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("WifiScanner", "onReceive()");
-
         updateScanResults();
         this.wifiList.postValue(mWifiList);
     }
@@ -86,6 +87,12 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
         Log.d("WifiScanner", "success update");
     }
 
+    public LiveData<Boolean> getIsRunningLiveData(){
+        return isRunningLiveData;
+    }
+    public void setIsRunning(boolean value){
+        isRunningLiveData.setValue(value);
+    }
 
     @Override
     public void run() {
