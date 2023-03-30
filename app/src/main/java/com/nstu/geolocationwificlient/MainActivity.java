@@ -12,6 +12,8 @@ import androidx.databinding.DataBindingUtil;
 import com.nstu.geolocationwificlient.databinding.ActivityMainBinding;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity{
 
 
@@ -22,6 +24,6 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
     }
 }

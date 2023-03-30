@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -46,13 +48,14 @@ public class WifiListFragment extends Fragment {
 
         adapter = new WifiListAdapter();
 
-        binding.wifiListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        int displaySizeMark = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int countSpan = displaySizeMark * getResources().getConfiguration().orientation - 1;
+
+        binding.wifiListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), countSpan <= 0 ? 1 : countSpan));
         binding.wifiListRecyclerView.setAdapter(adapter);
 
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
-
-
 
         mViewModel.getWifiList().
                 observe(getViewLifecycleOwner(), wifiList -> {
