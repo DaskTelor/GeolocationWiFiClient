@@ -3,7 +3,6 @@ package com.nstu.geolocationwificlient.ui.wifilist;
 import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
@@ -11,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.nstu.geolocationwificlient.DataRepository;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 import com.nstu.geolocationwificlient.data.Wifi;
 
@@ -25,18 +23,16 @@ public class WifiListViewModel extends AndroidViewModel {
     public WifiListViewModel(@NonNull Application application) {
         super(application);
 
-        wifiScanner = WifiScanner.getInstance();
-        wifiScanner.setWifiManager(
+        this.wifiScanner = WifiScanner.getInstance();
+        this.wifiScanner.setWifiManager(
                 (WifiManager) application.
                         getApplicationContext().
                         getSystemService(Context.WIFI_SERVICE));
 
-        DataRepository repository = DataRepository.getInstance(wifiScanner);
-
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         getApplication().registerReceiver(WifiScanner.getInstance(), intentFilter);
 
-        this.wifiList = repository.getData();
+        this.wifiList = wifiScanner.getWifiListLiveData();
     }
 
     public LiveData<List<Wifi>> getWifiList() {
@@ -47,7 +43,6 @@ public class WifiListViewModel extends AndroidViewModel {
         return wifiScanner.getIsRunningLiveData();
     }
     public void startStopWifiScanner(){
-        Log.d("WifiListViewModel", "startStopWifiScanner()");
         if(Boolean.TRUE.equals(wifiScanner.getIsRunningLiveData().getValue())){
             wifiScanner.setIsRunning(false);
             threadUpdateWifiList.interrupt();

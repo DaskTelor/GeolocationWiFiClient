@@ -59,7 +59,7 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
         return instance;
     }
 
-    public LiveData<List<Wifi>> loadAll() {
+    public LiveData<List<Wifi>> getWifiListLiveData() {
         return wifiList;
     }
 
