@@ -44,6 +44,9 @@ public class WifiListFragment extends Fragment {
         binding.wifiListRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.wifiListRecyclerView.setAdapter(adapter);
 
+        binding.setViewModel(mViewModel);
+        binding.setLifecycleOwner(this);
+
         mViewModel.getWifiList().
                 observe(getViewLifecycleOwner(), wifiList -> {
                     Log.d("WifiScanner", "observe: " + wifiList.toString());

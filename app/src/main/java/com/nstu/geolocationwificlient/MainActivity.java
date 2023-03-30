@@ -24,22 +24,8 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        binding.setWifiScanner(WifiScanner.getInstance());
-        binding.setLifecycleOwner(this);
 
         requestPermissions();
-
-        binding.buttonUpdate.setOnClickListener(view -> {
-            if(Boolean.TRUE.equals(WifiScanner.getInstance().getIsRunningLiveData().getValue())){
-                WifiScanner.getInstance().setIsRunning(false);
-                threadUpdateWifiList.interrupt();
-            }
-            else{
-                WifiScanner.getInstance().setIsRunning(true);
-                threadUpdateWifiList = new Thread(WifiScanner.getInstance());
-                threadUpdateWifiList.start();
-            }
-        });
     }
 
     public void requestPermissions(){
