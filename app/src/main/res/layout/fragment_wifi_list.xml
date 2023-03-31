@@ -27,7 +27,6 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:background="@drawable/button_wifi_scanner"
-            android:text="@{viewModel.wifiScannerRunning?String.format(@string/button_text_stop):String.format(@string/button_text_start)}"
-            android:onClick="@{() -> viewModel.startStopWifiScanner()}"/>
+            android:text="@{viewModel.wifiScannerRunning?String.format(@string/button_text_stop):String.format(@string/button_text_start)}"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>

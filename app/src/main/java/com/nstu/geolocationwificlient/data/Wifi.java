@@ -2,10 +2,31 @@ package com.nstu.geolocationwificlient.data;
 
 import androidx.annotation.NonNull;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class Wifi {
-    private final String ssid;
+    @SerializedName("ch")
+    @Expose
+    private int channelNumber;
+    @SerializedName("bss_mac")
+    @Expose
     private final String bssid;
-    private int level;
+    @SerializedName("type_bitmask")
+    @Expose
+    private byte typeBitmask;
+    @SerializedName("timestamp")
+    @Expose
+    private long timestamp;
+    @SerializedName("rssi")
+    @Expose
+    private final int level;
+    @SerializedName("ssid")
+    @Expose
+    private final String ssid;
+    @SerializedName("distance")
+    @Expose
+    private int distance;
 
     public Wifi() {
         this("SSID", "BSSID", 0);
@@ -28,11 +49,16 @@ public class Wifi {
         return level;
     }
 
-    @NonNull
     @Override
     public String toString() {
-        return "{SSID:" + this.ssid + ";"
-                + "BSSID:" + this.bssid + ";"
-                + "level:" + this.level + "}";
+        return "Wifi{" +
+                "channelNumber=" + channelNumber +
+                ", bssid='" + bssid + '\'' +
+                ", typeBitmask=" + typeBitmask +
+                ", timestamp=" + timestamp +
+                ", level=" + level +
+                ", ssid='" + ssid + '\'' +
+                ", distance=" + distance +
+                '}';
     }
 }

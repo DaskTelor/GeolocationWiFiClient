@@ -12,13 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.nstu.geolocationwificlient.data.ResultWifiScan;
 import com.nstu.geolocationwificlient.databinding.FragmentWifiListBinding;
 
 
@@ -57,14 +59,20 @@ public class WifiListFragment extends Fragment {
         binding.setViewModel(mViewModel);
         binding.setLifecycleOwner(this);
 
-        mViewModel.getWifiList().
+        mViewModel.getWifiListLiveData().
                 observe(getViewLifecycleOwner(), wifiList -> {
-                    Log.d("WifiScanner", "observe: " + wifiList.toString());
                     adapter.setData(wifiList);
                 });
 
-        requestPermissions();
-
+        binding.buttonUpdate.setOnClickListener(view -> {
+            if(Boolean.FALSE.equals(mViewModel.getWifiScannerRunning().getValue()))
+            {
+                requestPermissions();
+                mViewModel.startWifiScanner();
+            } else{
+                mViewModel.stopWifiScanner();
+            }
+        });
     }
     public void requestPermissions(){
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {

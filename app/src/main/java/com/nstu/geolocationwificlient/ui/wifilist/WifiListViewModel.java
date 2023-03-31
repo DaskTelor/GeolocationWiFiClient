@@ -9,22 +9,29 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 
+import com.nstu.geolocationwificlient.data.ResultWifiScan;
+import com.nstu.geolocationwificlient.network.NetworkService;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 import com.nstu.geolocationwificlient.data.Wifi;
 
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class WifiListViewModel extends AndroidViewModel {
     private Thread threadUpdateWifiList;
-    private final LiveData<List<Wifi>> wifiList;
-    private final WifiScanner wifiScanner;
+    private final LiveData<List<Wifi>> mWifiListLiveData;
+    private final WifiScanner mWifiScanner;
 
     public WifiListViewModel(@NonNull Application application) {
         super(application);
 
-        this.wifiScanner = WifiScanner.getInstance();
-        this.wifiScanner.setWifiManager(
+        mWifiScanner = WifiScanner.getInstance();
+        mWifiScanner.setWifiManager(
                 (WifiManager) application.
                         getApplicationContext().
                         getSystemService(Context.WIFI_SERVICE));
@@ -32,25 +39,56 @@ public class WifiListViewModel extends AndroidViewModel {
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         getApplication().registerReceiver(WifiScanner.getInstance(), intentFilter);
 
-        this.wifiList = wifiScanner.getWifiListLiveData();
+        mWifiListLiveData = mWifiScanner.getWifiListLiveData();
+        mWifiListLiveData.observeForever(new Observer<List<Wifi>>() {
+            @Override
+            public void onChanged(List<Wifi> wifiList) {
+                if(wifiList.isEmpty())
+                    return;
+                postResultWifiScan(
+                        new ResultWifiScan(
+                        "macId",
+                        "1.0",
+                        "GeolocationWifiClient",
+                        wifiList));
+            }
+        });
     }
 
-    public LiveData<List<Wifi>> getWifiList() {
-        return this.wifiList;
+    public LiveData<List<Wifi>> getWifiListLiveData() {
+        return this.mWifiListLiveData;
     }
 
     public LiveData<Boolean> getWifiScannerRunning(){
-        return wifiScanner.getIsRunningLiveData();
+        return mWifiScanner.getIsRunningLiveData();
     }
-    public void startStopWifiScanner(){
-        if(Boolean.TRUE.equals(wifiScanner.getIsRunningLiveData().getValue())){
-            wifiScanner.setIsRunning(false);
-            threadUpdateWifiList.interrupt();
-        }
-        else{
-            wifiScanner.setIsRunning(true);
-            threadUpdateWifiList = new Thread(wifiScanner);
-            threadUpdateWifiList.start();
-        }
+    public void stopWifiScanner(){
+        mWifiScanner.setIsRunning(false);
+        threadUpdateWifiList.interrupt();
+    }
+    public void startWifiScanner(){
+        mWifiScanner.setIsRunning(true);
+        threadUpdateWifiList = new Thread(mWifiScanner);
+        threadUpdateWifiList.start();
+    }
+    public void postResultWifiScan(ResultWifiScan resultWifiScan){
+        Call<ResultWifiScan> call = NetworkService.getInstance()
+                .getResultWifiScanApi()
+                .postResultWifiList(resultWifiScan);
+        call.enqueue(new Callback<ResultWifiScan>() {
+            @Override
+            public void onResponse(@NonNull Call<ResultWifiScan> call, @NonNull Response<ResultWifiScan> response) {
+                Log.d("Network", "onResponse");
+                if (response.isSuccessful()) {
+                    Log.d("Network", "Successful");
+                } else {
+                    Log.d("Network", "SomeError");
+                }
+            }
+            @Override
+            public void onFailure(@NonNull Call<ResultWifiScan> call, @NonNull Throwable t) {
+                Log.d("Network", "onFailure");
+            }
+        });
     }
 }
