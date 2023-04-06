@@ -29,15 +29,15 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
         switch(mSortType){
             case SSID:
                 Collections.sort(data,
-                        (Comparator<Wifi>) (o1, o2) -> o1.getSSID().compareTo(o2.getSSID()));
+                        Comparator.comparing(Wifi::getSSID));
                 break;
             case BSSID:
                 Collections.sort(data,
-                        (Comparator<Wifi>) (o1, o2) -> o1.getBSSID().compareTo(o2.getBSSID()));
+                        Comparator.comparing(Wifi::getBSSID));
                 break;
             case LEVEL:
                 Collections.sort(data,
-                        (Comparator<Wifi>) (o1, o2) -> Integer.compare(o1.getLevel(), o2.getLevel()));
+                        Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
                 break;
         }
 

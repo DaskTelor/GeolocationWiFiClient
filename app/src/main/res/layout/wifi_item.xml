@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@{@string/level_of_wifi(wifi.level)}" />
+            android:text="@{@string/level_of_wifi(wifi.level.get(0))}" />
 
         <TextView
             android:layout_width="wrap_content"

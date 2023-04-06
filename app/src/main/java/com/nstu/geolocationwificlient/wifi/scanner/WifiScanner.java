@@ -44,8 +44,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("WifiScanner", "onReceive()");
-        updateScanResults();
-        this.wifiList.postValue(mWifiList);
+        if(Boolean.TRUE.equals(isRunningLiveData.getValue())){
+            updateScanResults();
+            this.wifiList.postValue(mWifiList);
+        }
     }
 
     public static WifiScanner getInstance() {
@@ -80,10 +82,9 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
             }
             mWifiList.clear();
             for (ScanResult scanResult : scanResults) {
-                mWifiList.add(new Wifi(scanResult.SSID, scanResult.BSSID, scanResult.level));
+                mWifiList.add(new Wifi(scanResult));
             }
         }
-
         Log.d("WifiScanner", "success update");
     }
 

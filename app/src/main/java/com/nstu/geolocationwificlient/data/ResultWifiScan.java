@@ -15,10 +15,10 @@ public class ResultWifiScan {
     @SerializedName("version")
     @Expose
     private final String appVersion;
-    @SerializedName("app_name")
+    @SerializedName("ap_name")
     @Expose
     private final String appName;
-    @SerializedName("ap_list")
+    @SerializedName("probe_requests")
     @Expose
     private final List<Wifi> mWifiList;
 
@@ -44,4 +44,5 @@ public class ResultWifiScan {
     public String getAppName() {
         return appName;
     }
+
 }
