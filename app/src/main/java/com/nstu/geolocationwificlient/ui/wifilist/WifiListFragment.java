@@ -67,23 +67,29 @@ public class WifiListFragment extends Fragment {
         binding.buttonUpdate.setOnClickListener(view -> {
             if(Boolean.FALSE.equals(mViewModel.getWifiScannerRunning().getValue()))
             {
-                requestPermissions();
+                if(!requestPermissions())
+                    return;
                 mViewModel.startWifiScanner();
             } else{
                 mViewModel.stopWifiScanner();
             }
         });
     }
-    public void requestPermissions(){
+    public  boolean requestPermissions(){
+        boolean haveAllPermissions = true;
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_PERMISSION_FINE_LOCATION);
+            haveAllPermissions = false;
         }
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_WIFI_STATE}, REQUEST_CODE_PERMISSION_WIFI_STATE);
+            haveAllPermissions = false;
         }
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.CHANGE_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CHANGE_WIFI_STATE}, REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE);
+            haveAllPermissions = false;
         }
+        return haveAllPermissions;
     }
     @Override
     public void onDestroyView() {

@@ -63,13 +63,12 @@ public class Wifi {
         this(0,
                 scanResult.BSSID,
                 0,
-                (byte) 0,
+                (byte) 0b0,
                 scanResult.timestamp,
                 Collections.singletonList(scanResult.level),
                 scanResult.SSID,
                 Collections.singletonList(-1),
                 7);
-
     }
 
     public String getSSID() {
