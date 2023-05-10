@@ -29,7 +29,6 @@ public class WifiListFragment extends Fragment {
     private final int REQUEST_CODE_PERMISSION_FINE_LOCATION = 2;
     private final int REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE = 3;
     private FragmentWifiListBinding binding;
-    private WifiListAdapter adapter;
 
     public WifiListFragment(){
         super();
@@ -46,34 +45,24 @@ public class WifiListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        WifiListViewModel mViewModel = new ViewModelProvider(this).get(WifiListViewModel.class);
-
-        adapter = new WifiListAdapter();
+        WifiListViewModel viewModel = new ViewModelProvider(this).get(WifiListViewModel.class);
 
         int displaySizeMark = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         int countSpan = displaySizeMark * getResources().getConfiguration().orientation - 1;
 
         binding.wifiListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), countSpan <= 0 ? 1 : countSpan));
-        binding.wifiListRecyclerView.setAdapter(adapter);
+        binding.wifiListRecyclerView.setAdapter(viewModel.getWifiListAdapter());
 
-        binding.setViewModel(mViewModel);
+        binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
-        mViewModel.getWifiListLiveData().
+        viewModel.getWifiListLiveData().
                 observe(getViewLifecycleOwner(), wifiList -> {
-                    adapter.setData(wifiList);
+                    viewModel.getWifiListAdapter().setData(wifiList);
                 });
 
-        binding.buttonUpdate.setOnClickListener(view -> {
-            if(Boolean.FALSE.equals(mViewModel.getWifiScannerRunning().getValue()))
-            {
-                if(!requestPermissions())
-                    return;
-                mViewModel.startWifiScanner();
-            } else{
-                mViewModel.stopWifiScanner();
-            }
-        });
+        registerForContextMenu(binding.wifiListRecyclerView);
+
     }
     public  boolean requestPermissions(){
         boolean haveAllPermissions = true;
@@ -94,9 +83,6 @@ public class WifiListFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
         binding = null;
-        adapter = null;
     }
-
 }

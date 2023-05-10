@@ -5,4 +5,8 @@
     <string name="ssid_wifi">SSID: %s</string>
     <string name="bssid_wifi">BSSID: %s</string>
     <string name="level_of_wifi">Level: %s</string>
+    <string name="title_activity_bottom_navigation">BottomNavigationActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

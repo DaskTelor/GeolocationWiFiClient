@@ -26,26 +26,26 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Wifi> data) {
+        mItems.clear();
+        mItems.addAll(data);
+
         switch(mSortType){
             case SSID:
-                Collections.sort(data,
+                Collections.sort(mItems,
                         Comparator.comparing(Wifi::getSSID));
                 break;
             case BSSID:
-                Collections.sort(data,
+                Collections.sort(mItems,
                         Comparator.comparing(Wifi::getBSSID));
                 break;
             case LEVEL:
-                Collections.sort(data,
+                Collections.sort(mItems,
                         Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
                 break;
         }
 
         if (!mSortByAscending)
-            Collections.reverse(data);
-
-        mItems.clear();
-        mItems.addAll(data);
+            Collections.reverse(mItems);
 
         this.notifyDataSetChanged();
     }

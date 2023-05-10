@@ -2,6 +2,9 @@ package com.nstu.geolocationwificlient.data;
 
 import android.net.wifi.ScanResult;
 
+import androidx.annotation.Nullable;
+import androidx.room.Entity;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,23 +13,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
-public class Wifi {
+public class Wifi  {
+    @Expose(serialize = false)
+    private long id;
     @SerializedName("ch")
     @Expose
-    private int channelNumber;
+    private final int channelNumber;
     @SerializedName("mac")
     @Expose
     private final String bssid;
     @SerializedName("packet_count")
     @Expose
-    private int packetCount;
+    private final int packetCount;
     @SerializedName("type_bitmask")
     @Expose
-    private byte typeBitmask;
+    private final byte typeBitmask;
     @SerializedName("timestamp")
     @Expose
-    private long timestamp;
+    private final long timestamp;
     @SerializedName("rssi_array")
     @Expose
     private final List<Integer> level;
@@ -35,10 +41,10 @@ public class Wifi {
     private final String ssid;
     @SerializedName("distance_array")
     @Expose
-    private List<Integer> distance;
+    private final List<Integer> distance;
     @SerializedName("radarDataId")
     @Expose
-    private int  radarId;
+    private final int  radarId;
 
     public Wifi(int channelNumber,
                 String bssid,
@@ -83,4 +89,26 @@ public class Wifi {
         return level;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Wifi wifi = (Wifi) o;
+        return timestamp == wifi.timestamp && bssid.equals(wifi.bssid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bssid, timestamp);
+    }
+
+    @Override
+    public String toString() {
+        return "Wifi{" +
+                "bssid='" + bssid + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.Wifilist.WifiListFragment">
     <data>
         <variable
             name="viewModel"
@@ -11,22 +13,10 @@
         android:orientation="vertical">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/wifiListRecyclerView"
+            android:contextClickable="true"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:scrollbars="vertical" />
-        <androidx.appcompat.widget.AppCompatButton
-            android:layout_width="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_gravity="center"
-            android:paddingHorizontal="50dp"
-            android:paddingVertical="10dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/buttonUpdate"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:background="@drawable/button_wifi_scanner"
-            android:text="@{viewModel.wifiScannerRunning?String.format(@string/button_text_stop):String.format(@string/button_text_start)}"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </layout>
