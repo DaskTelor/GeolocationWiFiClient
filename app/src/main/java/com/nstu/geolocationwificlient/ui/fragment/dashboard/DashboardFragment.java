@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.ui.dashboard;
+package com.nstu.geolocationwificlient.ui.fragment.dashboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

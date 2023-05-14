@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.nstu.geolocationwificlient.ui.wifilist.WifiListViewModel" />
+            type="com.nstu.geolocationwificlient.ui.fragment.wifilist.WifiListViewModel" />
     </data>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_height="match_parent"

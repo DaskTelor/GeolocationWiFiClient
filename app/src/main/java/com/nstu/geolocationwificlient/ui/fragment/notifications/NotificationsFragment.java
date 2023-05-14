@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.ui.notifications;
+package com.nstu.geolocationwificlient.ui.fragment.notifications;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

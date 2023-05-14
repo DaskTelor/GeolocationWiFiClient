@@ -98,7 +98,6 @@ public class Wifi  {
         Wifi wifi = (Wifi) o;
         return timestamp == wifi.timestamp && bssid.equals(wifi.bssid);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(bssid, timestamp);

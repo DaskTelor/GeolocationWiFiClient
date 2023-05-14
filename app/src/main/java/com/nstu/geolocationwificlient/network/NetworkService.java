@@ -1,5 +1,7 @@
 package com.nstu.geolocationwificlient.network;
 
+import com.nstu.geolocationwificlient.network.api.ResultWifiScanApi;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

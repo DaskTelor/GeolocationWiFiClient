@@ -10,4 +10,12 @@
 
     <color name="light_blue">#2FACDD</color>
     <color name="light_grey">#A1A1A1</color>
+
+    <color name="orange">#FF9800</color>
+    <color name="light_orange">#FFC107</color>
+    <color name="dark_grey">#333333</color>
+    <color name="grey">#707070</color>
+    <color name="apricot">#FBCEB1</color>
+    <color name="antique_brass">#CD9575</color>
+    <color name="bronze">#CD7F32</color>
 </resources>

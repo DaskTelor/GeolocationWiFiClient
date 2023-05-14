@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.ui.wifilist;
+package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
@@ -11,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.data.Wifi;
 import com.nstu.geolocationwificlient.databinding.WifiItemBinding;
-import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;

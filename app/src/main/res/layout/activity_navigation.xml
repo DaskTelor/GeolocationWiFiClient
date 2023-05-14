@@ -38,7 +38,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
-            android:src="@{viewModel.isRunning()? @drawable/ic_dashboard_black_24dp : @drawable/ic_home_black_24dp}"
+            app:maxImageSize="46dp"
+            android:scaleType="center"
+            app:fabSize="auto"
+            android:src="@{viewModel.isRunning()? @drawable/ic_pause : @drawable/ic_play}"
             app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment_activity_bottom_navigation"
             app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_activity_bottom_navigation" />
 

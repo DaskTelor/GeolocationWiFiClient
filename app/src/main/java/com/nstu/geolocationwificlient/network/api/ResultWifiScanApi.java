@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.network;
+package com.nstu.geolocationwificlient.network.api;
 import com.nstu.geolocationwificlient.data.ResultWifiScan;
 import com.nstu.geolocationwificlient.data.Wifi;
 

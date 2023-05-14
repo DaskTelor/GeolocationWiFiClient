@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.ui.wifilist;
+package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,14 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nstu.geolocationwificlient.data.ResultWifiScan;
 import com.nstu.geolocationwificlient.databinding.FragmentWifiListBinding;
 
 
