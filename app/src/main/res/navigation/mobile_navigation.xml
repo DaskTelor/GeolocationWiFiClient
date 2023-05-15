@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/navigation_wifi_list"
         android:name="com.nstu.geolocationwificlient.ui.fragment.wifilist.WifiListFragment"
-        android:label="@string/title_home"
+        android:label="@string/title_wifi"
         tools:layout="@layout/fragment_wifi_list" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.nstu.geolocationwificlient.ui.fragment.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:id="@+id/navigation_locate"
+        android:name="com.nstu.geolocationwificlient.ui.fragment.locate.LocateFragment"
+        android:label="@string/title_locate"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment

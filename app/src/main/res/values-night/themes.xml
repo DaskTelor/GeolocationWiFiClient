@@ -1,10 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.GeolocationWiFiClient" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/apricot</item>
-        <item name="colorPrimaryDark">@color/purple_700</item>
-        <item name="colorAccent">@color/teal_200</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/bronze</item>
+        <item name="colorPrimaryDark">@color/brown</item>
+        <item name="colorAccent">@color/orange</item>
+        <item name="background">@color/dark_grey</item>
+        <item name="rippleColor">@color/antique_brass</item>
+        <item name="android:windowBackground">@color/dark_grey</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="colorPrimarySurface">@color/brown</item>
     </style>
 </resources>

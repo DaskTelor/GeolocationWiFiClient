@@ -9,8 +9,7 @@ public class SavedResultWifiScan {
     private int id;
     private String resultWifiScan;
 
-    public SavedResultWifiScan(int id, String resultWifiScan) {
-        this.id = id;
+    public SavedResultWifiScan(String resultWifiScan) {
         this.resultWifiScan = resultWifiScan;
     }
 

@@ -10,7 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.room.Room;
 
+import com.google.gson.Gson;
 import com.nstu.geolocationwificlient.data.ResultWifiScan;
+import com.nstu.geolocationwificlient.data.SavedResultWifiScan;
 import com.nstu.geolocationwificlient.db.AppDatabase;
 import com.nstu.geolocationwificlient.network.NetworkService;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
@@ -23,6 +25,7 @@ public class App extends Application {
 
     private WifiScanner mWifiScanner;
     private DataRepository mDataRepository;
+    private  AppDatabase mAppDatabase;
 
     @Override
     public void onCreate() {
@@ -31,8 +34,10 @@ public class App extends Application {
         mWifiScanner = WifiScanner.getInstance((WifiManager) getApplicationContext().
                 getSystemService(Context.WIFI_SERVICE));
 
+        mAppDatabase = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").build();
+
         mDataRepository = DataRepository.getInstance(
-                Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "database").build(),
+                mAppDatabase,
                 mWifiScanner);
 
         mWifiScanner.getWifiListLiveData().observeForever(wifiList -> {
@@ -51,6 +56,7 @@ public class App extends Application {
     }
 
     public void postResultWifiScan(ResultWifiScan resultWifiScan){
+
         Call<ResultWifiScan> call = NetworkService.getInstance()
                 .getResultWifiScanApi()
                 .postResultWifiList(resultWifiScan);
@@ -64,12 +70,18 @@ public class App extends Application {
                 } else {
                     Log.d("Network", "Some error");
                     Toast.makeText(getApplicationContext(), "POST: Some error", Toast.LENGTH_SHORT).show();
+
+                    /*new Thread(() -> mAppDatabase.resultWifiScanDao()
+                            .insertAll(new SavedResultWifiScan(new Gson().toJson(resultWifiScan))));*/
                 }
             }
             @Override
             public void onFailure(@NonNull Call<ResultWifiScan> call, @NonNull Throwable t) {
                 Log.d("Network", "onFailure");
                 Toast.makeText(getApplicationContext(), "POST: Fail", Toast.LENGTH_SHORT).show();
+
+                new Thread(() -> mAppDatabase.resultWifiScanDao()
+                        .insertAll(new SavedResultWifiScan(new Gson().toJson(resultWifiScan))));
             }
         });
     }

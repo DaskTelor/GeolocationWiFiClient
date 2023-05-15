@@ -59,6 +59,7 @@ public class WifiListFragment extends Fragment {
 
         registerForContextMenu(binding.wifiListRecyclerView);
 
+        requestPermissions();
     }
     public  boolean requestPermissions(){
         boolean haveAllPermissions = true;

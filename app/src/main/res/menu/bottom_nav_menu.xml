@@ -3,13 +3,13 @@
 
     <item
         android:id="@+id/navigation_wifi_list"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
+        android:icon="@drawable/ic_wifi"
+        android:title="@string/title_wifi" />
 
     <item
-        android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/title_dashboard" />
+        android:id="@+id/navigation_locate"
+        android:icon="@drawable/ic_locate"
+        android:title="@string/title_locate" />
 
     <item
         android:id="@+id/navigation_notifications"
