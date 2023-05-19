@@ -2,6 +2,8 @@ package com.nstu.geolocationwificlient.network;
 
 import com.nstu.geolocationwificlient.network.api.ResultWifiScanApi;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -17,6 +19,8 @@ public class NetworkService {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient.Builder client = new OkHttpClient.Builder()
+                .readTimeout(5, TimeUnit.SECONDS)
+                .connectTimeout(5, TimeUnit.SECONDS)
                 .addInterceptor(interceptor);
 
         mRetrofit = new Retrofit.Builder()

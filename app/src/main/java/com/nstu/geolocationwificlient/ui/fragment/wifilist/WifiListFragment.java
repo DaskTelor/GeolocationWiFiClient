@@ -13,11 +13,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.databinding.FragmentWifiListBinding;
+import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 
 public class WifiListFragment extends Fragment {
@@ -25,6 +30,7 @@ public class WifiListFragment extends Fragment {
     private final int REQUEST_CODE_PERMISSION_FINE_LOCATION = 2;
     private final int REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE = 3;
     private FragmentWifiListBinding binding;
+    private WifiListViewModel viewModel;
 
     public WifiListFragment(){
         super();
@@ -41,13 +47,14 @@ public class WifiListFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        WifiListViewModel viewModel = new ViewModelProvider(this).get(WifiListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(WifiListViewModel.class);
 
         int displaySizeMark = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         int countSpan = displaySizeMark * getResources().getConfiguration().orientation - 1;
 
         binding.wifiListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), countSpan <= 0 ? 1 : countSpan));
         binding.wifiListRecyclerView.setAdapter(viewModel.getWifiListAdapter());
+        viewModel.setLifecycleOwner(getViewLifecycleOwner());
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
@@ -56,7 +63,6 @@ public class WifiListFragment extends Fragment {
                 observe(getViewLifecycleOwner(), wifiList -> {
                     viewModel.getWifiListAdapter().setData(wifiList);
                 });
-
         registerForContextMenu(binding.wifiListRecyclerView);
 
         requestPermissions();
@@ -77,6 +83,34 @@ public class WifiListFragment extends Fragment {
         }
         return haveAllPermissions;
     }
+
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if(viewModel.getContextClickItem() == null)
+            return;
+
+        if(Boolean.TRUE.equals(viewModel.getContextClickItem().getIsTracked().getValue()))
+            new MenuInflater(getContext()).inflate(R.menu.wifi_action_tracked_menu, menu);
+        else
+            new MenuInflater(getContext()).inflate(R.menu.wifi_action_menu, menu);
+
+        viewModel.stopScan();
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case (R.id.action_start_tracking):
+                viewModel.startTrackingSelectedItem();
+                break;
+            case (R.id.action_stop_tracking):
+                viewModel.stopTrackingSelectedItem();
+        }
+        return true;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

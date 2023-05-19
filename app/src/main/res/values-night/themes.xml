@@ -5,10 +5,11 @@
         <item name="colorPrimaryDark">@color/brown</item>
         <item name="colorAccent">@color/orange</item>
         <item name="background">@color/dark_grey</item>
-        <item name="rippleColor">@color/antique_brass</item>
+        <item name="rippleColor">@color/light_light_grey</item>
         <item name="android:windowBackground">@color/dark_grey</item>
         <item name="android:textColorPrimary">@color/white</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/light_light_grey</item>
         <item name="colorPrimarySurface">@color/brown</item>
+        <item name="colorSurfaceVariant">@color/grey</item>
     </style>
 </resources>

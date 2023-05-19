@@ -17,7 +17,7 @@ public interface SavedResultWifiScanDao {
     void delete(SavedResultWifiScan user);
     @Query("SELECT * FROM savedresultwifiscan")
     List<SavedResultWifiScan> getAll();
-    @Query("SELECT * FROM savedresultwifiscan LIMIT 1")
+    @Query("SELECT * FROM savedresultwifiscan")
     List<SavedResultWifiScan> getOne();
 
 }

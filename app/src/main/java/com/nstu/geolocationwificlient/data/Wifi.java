@@ -2,22 +2,17 @@ package com.nstu.geolocationwificlient.data;
 
 import android.net.wifi.ScanResult;
 
-import androidx.annotation.Nullable;
-import androidx.room.Entity;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class Wifi  {
-    @Expose(serialize = false)
-    private long id;
     @SerializedName("ch")
     @Expose
     private final int channelNumber;
@@ -25,7 +20,6 @@ public class Wifi  {
     @Expose
     private final String bssid;
     @SerializedName("packet_count")
-    @Expose
     private final int packetCount;
     @SerializedName("type_bitmask")
     @Expose
@@ -45,7 +39,8 @@ public class Wifi  {
     @SerializedName("radarDataId")
     @Expose
     private final int  radarId;
-
+    @Expose(serialize = false, deserialize = false)
+    private final MutableLiveData<Boolean> mIsTracked = new MutableLiveData<>(false);
     public Wifi(int channelNumber,
                 String bssid,
                 int packetCount,
@@ -96,18 +91,18 @@ public class Wifi  {
         if (o == null || getClass() != o.getClass())
             return false;
         Wifi wifi = (Wifi) o;
-        return timestamp == wifi.timestamp && bssid.equals(wifi.bssid);
+
+        return timestamp == wifi.timestamp && bssid.equals(wifi.bssid) && level.get(0).equals(wifi.level.get(0));
     }
     @Override
     public int hashCode() {
         return Objects.hash(bssid, timestamp);
     }
 
-    @Override
-    public String toString() {
-        return "Wifi{" +
-                "bssid='" + bssid + '\'' +
-                ", timestamp=" + timestamp +
-                '}';
+    public void setIsTracked(boolean isTracked){
+        mIsTracked.postValue(isTracked);
+    }
+    public LiveData<Boolean> getIsTracked(){
+        return mIsTracked;
     }
 }

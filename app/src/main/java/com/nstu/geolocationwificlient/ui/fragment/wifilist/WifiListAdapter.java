@@ -1,11 +1,16 @@
 package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.annotation.SuppressLint;
+import android.database.Observable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nstu.geolocationwificlient.R;
@@ -21,6 +26,9 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
     private final List<Wifi> mItems = new LinkedList<>();
     private WifiSortType mSortType = WifiSortType.BSSID;
     private boolean mSortByAscending = false;
+    private Wifi mContextClickItem = null;
+    private final MutableLiveData<LifecycleOwner> mLifecycleOwnerLiveData = new MutableLiveData<>();
+
 
     @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Wifi> data) {
@@ -55,7 +63,18 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         WifiItemBinding binding = DataBindingUtil.inflate(inflater, R.layout.wifi_item, parent, false);
 
-        return new WifiHolder(binding);
+        WifiHolder holder = new WifiHolder(binding, mLifecycleOwnerLiveData);
+
+        binding.getRoot().setOnCreateContextMenuListener(
+                (contextMenu, view, contextMenuInfo) -> {
+                    if(mItems.size() < holder.getAdapterPosition()) {
+                        mContextClickItem = null;
+                        return;
+                    }
+                    mContextClickItem = mItems.get(holder.getAdapterPosition());
+                });
+
+        return holder;
     }
 
     @Override
@@ -67,18 +86,27 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
     public int getItemCount() {
         return  mItems.size();
     }
+    public Wifi getContextClickItem(){
+        return mContextClickItem;
+    }
+    public void changeLifecycleOwner(LifecycleOwner lifecycleOwner){
+        mLifecycleOwnerLiveData.setValue(lifecycleOwner);
+    }
 
     static class WifiHolder extends RecyclerView.ViewHolder{
-        WifiItemBinding binding;
-
-        public WifiHolder(@NonNull WifiItemBinding binding) {
+        private int id;
+        WifiItemBinding mBinding;
+        public WifiHolder(@NonNull WifiItemBinding binding, MutableLiveData<LifecycleOwner> lifecycleOwnerLiveData) {
             super(binding.getRoot());
-            this.binding = binding;
+            mBinding = binding;
+            lifecycleOwnerLiveData.observeForever(lifecycleOwner -> {
+                mBinding.setLifecycleOwner(lifecycleOwner);
+            });
         }
 
         public void bind(Wifi wifi) {
-            binding.setWifi(wifi);
-            binding.executePendingBindings();
+            mBinding.setWifi(wifi);
+            mBinding.executePendingBindings();
         }
     }
 }

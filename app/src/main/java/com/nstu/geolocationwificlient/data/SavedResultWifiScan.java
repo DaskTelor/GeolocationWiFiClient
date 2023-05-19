@@ -28,4 +28,12 @@ public class SavedResultWifiScan {
     public void setResultWifiScan(String resultWifiScan) {
         this.resultWifiScan = resultWifiScan;
     }
+
+    @Override
+    public String toString() {
+        return "SavedResultWifiScan{" +
+                "id=" + id +
+                ", resultWifiScan='" + resultWifiScan + '\'' +
+                '}';
+    }
 }

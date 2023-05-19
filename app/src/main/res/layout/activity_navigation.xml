@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
         <fragment
             android:id="@+id/nav_host_fragment_activity_bottom_navigation"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -35,16 +34,28 @@
             app:menu="@menu/bottom_nav_menu" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:src="@drawable/ic_down_arrow"
+            app:fabSize="auto"
+            app:layout_constraintBottom_toTopOf="@+id/fab_scan"
+            app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_activity_bottom_navigation"
+            app:maxImageSize="25dp" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             app:maxImageSize="46dp"
-            android:scaleType="center"
             app:fabSize="auto"
-            android:src="@{viewModel.isRunning()? @drawable/ic_pause : @drawable/ic_play}"
+            android:src="@{viewModel.isRunning()? @drawable/ic_pause : @drawable/draw_play}"
             app:layout_constraintBottom_toBottomOf="@+id/nav_host_fragment_activity_bottom_navigation"
             app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_activity_bottom_navigation" />
+
+
 
 
 

@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@color/white</item>
         <item name="android:textColorPrimary">@color/black</item>
         <item name="android:textColor">@color/dark_grey</item>
-        <item name="colorPrimarySurface">#FFFFFF</item>
+        <item name="colorPrimarySurface">@color/white</item>
+        <item name="colorSurfaceVariant">@color/apricot</item>
     </style>
 </resources>

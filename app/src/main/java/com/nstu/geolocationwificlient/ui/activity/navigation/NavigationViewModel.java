@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.room.Room;
 
+import com.nstu.geolocationwificlient.App;
 import com.nstu.geolocationwificlient.BuildConfig;
 import com.nstu.geolocationwificlient.DataRepository;
 import com.nstu.geolocationwificlient.data.ResultWifiScan;
@@ -30,23 +31,21 @@ import retrofit2.Response;
 public class NavigationViewModel extends AndroidViewModel{
     private final WifiScanner mWifiScanner;
     private final DataRepository mDataRepository;
-    private Thread threadUpdateWifiList;
+    private final App mApp;
 
     public NavigationViewModel(@NonNull Application application) {
         super(application);
         mWifiScanner = WifiScanner.getInstance();
         mDataRepository = DataRepository.getInstance();
+        mApp = (App) application;
     }
 
 
     public void stopWifiScanner(){
-        mWifiScanner.setIsRunning(false);
-        threadUpdateWifiList.interrupt();
+        mApp.stopWifiScan();
     }
     public void startWifiScanner(){
-        mWifiScanner.setIsRunning(true);
-        threadUpdateWifiList = new Thread(mWifiScanner);
-        threadUpdateWifiList.start();
+        mApp.startWifiScan();
     }
     public LiveData<Boolean> isRunning(){
         return mWifiScanner.getIsRunningLiveData();
