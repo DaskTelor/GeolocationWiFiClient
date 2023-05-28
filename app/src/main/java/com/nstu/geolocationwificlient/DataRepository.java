@@ -8,21 +8,20 @@ import com.nstu.geolocationwificlient.db.AppDatabase;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class DataRepository {
     private static volatile DataRepository mInstance;
     private AppDatabase mAppDatabase;
     private WifiScanner mWifiScanner;
-    private HashMap<String, List<WifiSignals>> mTrackedBssidSet;
+    private HashMap<String, WifiSignals> mTrackedBssidSet;
 
-    public DataRepository(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, List<WifiSignals>> trackedBssidSet) {
+    public DataRepository(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, WifiSignals> trackedBssidSet) {
         mAppDatabase = appDatabase;
         mWifiScanner = wifiScanner;
         mTrackedBssidSet = trackedBssidSet;
     }
-    public static DataRepository getInstance(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, List<WifiSignals>> trackedBssidSet){
+    public static DataRepository getInstance(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, WifiSignals> trackedBssidSet){
         if(mInstance == null){
             synchronized (DataRepository.class){
                 if(mInstance == null){
@@ -39,7 +38,7 @@ public class DataRepository {
         return mInstance;
     }
 
-    public HashMap<String, List<WifiSignals>> getTrackedBssidSet(){
+    public HashMap<String, WifiSignals> getTrackedWifiSignalsSet(){
         return mTrackedBssidSet;
     }
 

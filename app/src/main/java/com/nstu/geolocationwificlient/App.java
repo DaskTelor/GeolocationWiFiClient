@@ -15,13 +15,13 @@ import com.nstu.geolocationwificlient.data.SavedResultWifiScan;
 import com.nstu.geolocationwificlient.data.Wifi;
 import com.nstu.geolocationwificlient.data.WifiSignals;
 import com.nstu.geolocationwificlient.db.AppDatabase;
+import com.nstu.geolocationwificlient.listener.IWifiTrackedChangeListener;
 import com.nstu.geolocationwificlient.network.NetworkService;
 import com.nstu.geolocationwificlient.network.NetworkUtils;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +33,9 @@ public class App extends Application {
     private WifiScanner mWifiScanner;
     private DataRepository mDataRepository;
     private  AppDatabase mAppDatabase;
-    private HashMap<String, List<WifiSignals>> mTrackedBssidSet;
+    private int countOfScanning = 0;
+    private HashMap<String, WifiSignals> mTrackedBssidSet;
+    private IWifiTrackedChangeListener IWifiTrackedChangeListener;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -53,12 +55,28 @@ public class App extends Application {
         mWifiScanner.getWifiListLiveData().observeForever(wifiList -> {
             if(wifiList.isEmpty())
                 return;
+
             postResultWifiScan(
                     new ResultWifiScan(
                             NetworkUtils.getMACAddress("wlan0"),
                             BuildConfig.VERSION_NAME,
                             getApplicationInfo().processName,
                             wifiList));
+
+            countOfScanning++;
+
+            for (Wifi wifi: wifiList) {
+
+                if(Boolean.FALSE.equals(wifi.getIsTracked().getValue()))
+                    continue;
+
+                WifiSignals wifiSignalsByBssid = mTrackedBssidSet.get(wifi.getBSSID());
+
+                if(wifiSignalsByBssid == null)
+                    continue;
+
+                wifiSignalsByBssid.addItem(wifi.getLevel().get(0), countOfScanning);
+            }
         });
 
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
@@ -85,8 +103,8 @@ public class App extends Application {
             @Override
             public void onFailure(@NonNull Call<ResultWifiScan> call, @NonNull Throwable t) {
                 Log.d("Network", "onFailure");
-                /*new Thread(() -> mAppDatabase.resultWifiScanDao()
-                        .insertAll(new SavedResultWifiScan(new Gson().toJson(resultWifiScan)))).start();*/
+                new Thread(() -> mAppDatabase.resultWifiScanDao()
+                        .insertAll(new SavedResultWifiScan(new Gson().toJson(resultWifiScan))));
 
             }
         });
@@ -102,10 +120,19 @@ public class App extends Application {
         mWifiScanner.setIsRunning(false);
     }
     public void addTrackedBssid(String bssid){
-        mTrackedBssidSet.put(bssid, null);
+        WifiSignals wifiSignals = new WifiSignals();
+        mTrackedBssidSet.put(bssid, wifiSignals);
+
+        if(IWifiTrackedChangeListener == null)
+            return;
+
+        IWifiTrackedChangeListener.onAddWifiTracked(new AbstractMap.SimpleEntry<>(bssid, wifiSignals));
     }
     public void removeTrackedBssid(String bssid){
         mTrackedBssidSet.remove(bssid);
+    }
+    public void setWifiTrackedChangeListener(IWifiTrackedChangeListener IWifiTrackedChangeListener){
+        this.IWifiTrackedChangeListener = IWifiTrackedChangeListener;
     }
 }
 

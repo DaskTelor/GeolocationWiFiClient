@@ -1,7 +1,7 @@
 package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.annotation.SuppressLint;
-import android.database.Observable;
+
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -71,6 +71,8 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
                         mContextClickItem = null;
                         return;
                     }
+                    if(holder.getAdapterPosition() >= mItems.size() || holder.getAdapterPosition() < 0)
+                        return;
                     mContextClickItem = mItems.get(holder.getAdapterPosition());
                 });
 

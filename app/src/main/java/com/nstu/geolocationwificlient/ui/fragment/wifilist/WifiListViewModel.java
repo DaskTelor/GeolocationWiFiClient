@@ -1,7 +1,6 @@
 package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -11,7 +10,6 @@ import androidx.lifecycle.LiveData;
 import com.nstu.geolocationwificlient.App;
 import com.nstu.geolocationwificlient.DataRepository;
 import com.nstu.geolocationwificlient.data.Wifi;
-import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 import java.util.List;
 

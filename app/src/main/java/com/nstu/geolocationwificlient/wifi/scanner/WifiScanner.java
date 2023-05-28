@@ -29,9 +29,9 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     private final MutableLiveData<List<Wifi>> mWifiListLiveData;
     private final ArrayList<Wifi> mWifiList;
     private  volatile int mDelay;
-    private volatile HashMap<String, List<WifiSignals>> mTrackedBssidSet;
+    private volatile HashMap<String, WifiSignals> mTrackedBssidSet;
 
-    private WifiScanner(WifiManager wifiManager, HashMap<String, List<WifiSignals>> trackedBssid) {
+    private WifiScanner(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
         this.mWifiListLiveData = new MutableLiveData<>();
         this.mWifiList = new ArrayList<>();
         this.isRunningLiveData = new MutableLiveData<>(false);
@@ -101,7 +101,7 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
         }
         return instance;
     }
-    public static WifiScanner getInstance(WifiManager wifiManager, HashMap<String, List<WifiSignals>> trackedBssid) {
+    public static WifiScanner getInstance(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
         if (instance == null) {
             synchronized (WifiScanner.class) {
                 if (instance == null) {

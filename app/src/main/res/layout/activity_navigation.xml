@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:src="@drawable/ic_down_arrow"
-            app:fabSize="auto"
+            app:fabSize="mini"
             app:layout_constraintBottom_toTopOf="@+id/fab_scan"
             app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_activity_bottom_navigation"
             app:maxImageSize="25dp" />
