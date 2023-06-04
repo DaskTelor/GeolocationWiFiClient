@@ -71,6 +71,8 @@ public class App extends Application {
                             getApplicationInfo().processName,
                             wifiList);
 
+            postResultWifiScan(wifiScan);
+
             int secondsPassed = (int) ((new Date().getTime() - dateOfStart.getTime()) / 1000);
 
             for (Wifi wifi : wifiList) {
