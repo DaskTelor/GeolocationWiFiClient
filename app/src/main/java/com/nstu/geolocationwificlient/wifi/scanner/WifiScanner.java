@@ -15,35 +15,32 @@ import com.nstu.geolocationwificlient.data.WifiSignals;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class WifiScanner extends BroadcastReceiver implements Runnable{
 
     private final String LogWifiScanner = "WifiScanner";
-    // Singleton instance
-    private static WifiScanner instance;
-    private Thread mCurrentThread;
-    private WifiManager mWifiManager;
-    private MutableLiveData<Boolean> isRunningLiveData;
+    private static WifiScanner mInstance;
+    private final WifiManager mWifiManager;
+    private final MutableLiveData<Boolean> mIsRunningLiveData;
     private final MutableLiveData<List<Wifi>> mWifiListLiveData;
     private final ArrayList<Wifi> mWifiList;
-    private  volatile int mDelay;
-    private volatile HashMap<String, WifiSignals> mTrackedBssidSet;
+    private final int mDelay;
+    private final HashMap<String, WifiSignals> mTrackedBssidSet;
 
     private WifiScanner(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
-        this.mWifiListLiveData = new MutableLiveData<>();
-        this.mWifiList = new ArrayList<>();
-        this.isRunningLiveData = new MutableLiveData<>(false);
-        this.mWifiManager = wifiManager;
+        mWifiListLiveData = new MutableLiveData<>();
+        mWifiList = new ArrayList<>();
+        mIsRunningLiveData = new MutableLiveData<>(false);
+        mWifiManager = wifiManager;
         mDelay = 1000;
-        this.mWifiListLiveData.postValue(this.mWifiList);
+        mWifiListLiveData.postValue(this.mWifiList);
         mTrackedBssidSet = trackedBssid;
     }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(Boolean.FALSE.equals(isRunningLiveData.getValue()))
+        if(Boolean.FALSE.equals(mIsRunningLiveData.getValue()))
             return;
         Log.d(LogWifiScanner, "OnReceive");
         if(updateScanResults())
@@ -73,8 +70,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
 
             if(newWifiList.size() == mWifiList.size()){
                 for (int i = 0; i < mWifiList.size(); i++){
-                    if (!mWifiList.get(i).equals(newWifiList.get(i)))
+                    if (!mWifiList.get(i).equals(newWifiList.get(i))){
                         prevEquals = false;
+                        break;
+                    }
                 }
             } else
                 prevEquals = false;
@@ -89,27 +88,26 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
                 if(mTrackedBssidSet.containsKey(wifi.getBSSID()))
                     wifi.setIsTracked(true);
             }
-            Log.d(LogWifiScanner, "prev is equals: " + prevEquals);
 
             return !prevEquals;
         }
     }
 
     public static WifiScanner getInstance() {
-        if (instance == null) {
+        if (mInstance == null) {
             throw new NullPointerException();
         }
-        return instance;
+        return mInstance;
     }
-    public static WifiScanner getInstance(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
-        if (instance == null) {
+    public static WifiScanner createInstance(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
+        if (mInstance == null) {
             synchronized (WifiScanner.class) {
-                if (instance == null) {
-                    instance = new WifiScanner(wifiManager, trackedBssid);
+                if (mInstance == null) {
+                    mInstance = new WifiScanner(wifiManager, trackedBssid);
                 }
             }
         }
-        return instance;
+        return mInstance;
     }
 
     public LiveData<List<Wifi>> getWifiListLiveData() {
@@ -117,10 +115,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     }
 
     public LiveData<Boolean> getIsRunningLiveData(){
-        return isRunningLiveData;
+        return mIsRunningLiveData;
     }
     public void setIsRunning(boolean value){
-        isRunningLiveData.setValue(value);
+        mIsRunningLiveData.setValue(value);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.nstu.geolocationwificlient.data;
 
 import android.util.Log;
 
-import com.nstu.geolocationwificlient.listener.IWifiSignalsChangeListener;
+import com.nstu.geolocationwificlient.listeners.IWifiSignalsChangeListener;
 
 import java.util.ArrayList;
 
@@ -19,12 +19,8 @@ public class WifiSignals {
         mRssi.add(rssi);
         mTimeSteps.add(timeStep);
 
-        Log.d("Charts", this.toString());
-
         if(mIWifiSignalsChangeListener == null)
             return;
-
-        Log.d("Charts", this.toString() + " Hi");
 
         mIWifiSignalsChangeListener.onAddWifiSignal(rssi, timeStep);
     }

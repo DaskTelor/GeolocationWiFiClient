@@ -12,10 +12,8 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import com.nstu.geolocationwificlient.App;
 import com.nstu.geolocationwificlient.DataRepository;
 import com.nstu.geolocationwificlient.data.WifiSignals;
-import com.nstu.geolocationwificlient.listener.IDataSetsChangeListener;
-import com.nstu.geolocationwificlient.listener.IConfigLineDataSetStrategy;
-import com.nstu.geolocationwificlient.listener.IWifiSignalsChangeListener;
-import com.nstu.geolocationwificlient.listener.IWifiTrackedChangeListener;
+import com.nstu.geolocationwificlient.listeners.IWifiSignalsChangeListener;
+import com.nstu.geolocationwificlient.listeners.IWifiTrackedChangeListener;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,9 +22,8 @@ public class ChartsViewModel extends AndroidViewModel {
     private DataRepository dataRepository;
     private ArrayList<ILineDataSet> dataSets;
     private IDataSetsChangeListener IDataSetsChangeListener;
-    private IConfigLineDataSetStrategy configLineDataSetStrategy;
+    private IConfigureStrategy configLineDataSetStrategy;
     private int colorIndex = 0;
-
     public ChartsViewModel(@NonNull Application application) {
         super(application);
 
@@ -39,7 +36,7 @@ public class ChartsViewModel extends AndroidViewModel {
         LineDataSet lineDataSet = new LineDataSet(values, title);
 
         if(configLineDataSetStrategy != null)
-            configLineDataSetStrategy.config(lineDataSet);
+            configLineDataSetStrategy.configure(lineDataSet);
         data.setChangeListener(new IWifiSignalsChangeListener() {
             @Override
             public void onAddWifiSignal(int rssi, int timeStep) {
@@ -52,7 +49,6 @@ public class ChartsViewModel extends AndroidViewModel {
                 IDataSetsChangeListener.onChangeDatasets();
             }
         });
-
 
         return lineDataSet;
     }
@@ -97,7 +93,7 @@ public class ChartsViewModel extends AndroidViewModel {
     public void setDataSetsChangeListener(IDataSetsChangeListener IDataSetsChangeListener){
         this.IDataSetsChangeListener = IDataSetsChangeListener;
     }
-    public void setConfigLineDataSetStrategy(IConfigLineDataSetStrategy configLineDataSetStrategy){
+    public void setConfigLineDataSetStrategy(IConfigureStrategy configLineDataSetStrategy){
         this.configLineDataSetStrategy = configLineDataSetStrategy;
     }
     public int getNextIndex(){

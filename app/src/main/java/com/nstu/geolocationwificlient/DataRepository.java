@@ -21,7 +21,7 @@ public class DataRepository {
         mWifiScanner = wifiScanner;
         mTrackedBssidSet = trackedBssidSet;
     }
-    public static DataRepository getInstance(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, WifiSignals> trackedBssidSet){
+    public static DataRepository createInstance(AppDatabase appDatabase, WifiScanner wifiScanner, HashMap<String, WifiSignals> trackedBssidSet){
         if(mInstance == null){
             synchronized (DataRepository.class){
                 if(mInstance == null){

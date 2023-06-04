@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.listener;
+package com.nstu.geolocationwificlient.ui.fragment.charts;
 
 public interface IDataSetsChangeListener {
     void onChangeDatasets();

@@ -2,6 +2,6 @@ package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import com.nstu.geolocationwificlient.data.Wifi;
 
-public interface WifiAdapterListener {
-    void onItemClick(Wifi wifi);
+public interface IWifiItemListener {
+    void onClick(Wifi wifi);
 }

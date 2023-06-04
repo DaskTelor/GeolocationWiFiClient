@@ -11,4 +11,17 @@
     <string name="title_charts">Charts</string>
     <string name="title_start_tracking">Start tracking</string>
     <string name="title_stop_tracking">Stop tracking</string>
+
+    <string name="title_sort_wifi_list">Choose sort wifi list</string>
+
+    <string name="ok">OK</string>
+
+    <string-array name="sort_by">
+        <item>by BSSID</item>
+        <item>by SSID</item>
+        <item>by RSSI</item>
+    </string-array>
+
+    <string name="sort_by_ascending">Ascending</string>
+    <string name="sort_by_descending">Descending</string>
 </resources>

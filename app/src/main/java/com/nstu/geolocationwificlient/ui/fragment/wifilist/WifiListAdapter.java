@@ -1,16 +1,13 @@
 package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.annotation.SuppressLint;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nstu.geolocationwificlient.R;
@@ -37,16 +34,13 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
 
         switch(mSortType){
             case SSID:
-                Collections.sort(mItems,
-                        Comparator.comparing(Wifi::getSSID));
+                mItems.sort(Comparator.comparing(Wifi::getSSID));
                 break;
             case BSSID:
-                Collections.sort(mItems,
-                        Comparator.comparing(Wifi::getBSSID));
+                mItems.sort(Comparator.comparing(Wifi::getBSSID));
                 break;
             case LEVEL:
-                Collections.sort(mItems,
-                        Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
+                mItems.sort(Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
                 break;
         }
 

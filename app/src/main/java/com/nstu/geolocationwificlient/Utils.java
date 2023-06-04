@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.network;
+package com.nstu.geolocationwificlient;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -13,7 +13,7 @@ import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
 
-public class NetworkUtils {
+public class Utils {
 
     /**
      * Get unique Android Id.

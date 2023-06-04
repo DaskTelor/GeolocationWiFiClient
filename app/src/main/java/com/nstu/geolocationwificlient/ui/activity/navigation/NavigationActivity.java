@@ -1,8 +1,7 @@
 package com.nstu.geolocationwificlient.ui.activity.navigation;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,8 +10,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.databinding.ActivityNavigationBinding;
+import com.nstu.geolocationwificlient.databinding.DialogSortWifiListBinding;
 
 import java.util.Objects;
 
@@ -20,6 +21,7 @@ public class NavigationActivity extends AppCompatActivity {
 
     private ActivityNavigationBinding binding;
     private NavigationViewModel viewModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,21 @@ public class NavigationActivity extends AppCompatActivity {
             }else{
                 viewModel.stopWifiScanner();
             }
+        });
+
+        binding.fabSort.setOnClickListener(view -> {
+            DialogSortWifiListBinding dialogBinding = DialogSortWifiListBinding.inflate(getLayoutInflater());
+
+
+
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.title_sort_wifi_list)
+                    .setView(dialogBinding.getRoot())
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+
+                    })
+                    .create()
+                    .show();
         });
     }
 

@@ -1,37 +1,23 @@
 package com.nstu.geolocationwificlient.ui.activity.navigation;
 
 import android.app.Application;
-import android.content.Context;
-import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
-import androidx.room.Room;
+import androidx.lifecycle.MutableLiveData;
 
 import com.nstu.geolocationwificlient.App;
-import com.nstu.geolocationwificlient.BuildConfig;
 import com.nstu.geolocationwificlient.DataRepository;
-import com.nstu.geolocationwificlient.data.ResultWifiScan;
-import com.nstu.geolocationwificlient.data.Wifi;
-import com.nstu.geolocationwificlient.db.AppDatabase;
-import com.nstu.geolocationwificlient.network.NetworkService;
+import com.nstu.geolocationwificlient.ui.fragment.wifilist.WifiSortType;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
-
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class NavigationViewModel extends AndroidViewModel{
     private final WifiScanner mWifiScanner;
     private final DataRepository mDataRepository;
     private final App mApp;
+    private MutableLiveData<WifiSortType> mSortType = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mAscending = new MutableLiveData<>();
 
     public NavigationViewModel(@NonNull Application application) {
         super(application);
@@ -49,5 +35,18 @@ public class NavigationViewModel extends AndroidViewModel{
     }
     public LiveData<Boolean> isRunning(){
         return mWifiScanner.getIsRunningLiveData();
+    }
+
+    public void setAscending(boolean ascending) {
+        mAscending.setValue(ascending);
+    }
+    public LiveData<Boolean> getAscending(){
+        return mAscending;
+    }
+    public void setSortType(WifiSortType sortType) {
+        mSortType.setValue(sortType);
+    }
+    public LiveData<WifiSortType> getSortType(){
+        return mSortType;
     }
 }

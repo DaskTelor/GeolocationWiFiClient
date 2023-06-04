@@ -1,4 +1,4 @@
-package com.nstu.geolocationwificlient.listener;
+package com.nstu.geolocationwificlient.listeners;
 
 import com.nstu.geolocationwificlient.data.WifiSignals;
 
