@@ -58,7 +58,7 @@ public class App extends Application {
                 mWifiScanner,
                 mTrackedBssidSet);
 
-        String mac = Utils.getMACAddress("wlan0");
+        mac = Utils.getMACAddress("wlan0");
 
         mDataRepository.getWifiList().observeForever(wifiList -> {
             if (wifiList.isEmpty())
