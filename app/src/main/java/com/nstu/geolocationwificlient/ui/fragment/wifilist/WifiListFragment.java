@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 
@@ -28,6 +29,7 @@ public class WifiListFragment extends Fragment {
     private final int REQUEST_CODE_PERMISSION_CHANGE_WIFI_STATE = 3;
     private FragmentWifiListBinding binding;
     private WifiListViewModel viewModel;
+    private WifiListAdapter wifiListAdapter;
 
     public WifiListFragment(){
         super();
@@ -49,18 +51,33 @@ public class WifiListFragment extends Fragment {
         int displaySizeMark = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
         int countSpan = displaySizeMark * getResources().getConfiguration().orientation - 1;
 
+        wifiListAdapter = new WifiListAdapter();
+
         binding.wifiListRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), countSpan <= 0 ? 1 : countSpan));
-        binding.wifiListRecyclerView.setAdapter(viewModel.getWifiListAdapter());
-        viewModel.setLifecycleOwner(getViewLifecycleOwner());
+        binding.wifiListRecyclerView.setAdapter(wifiListAdapter);
+        wifiListAdapter.changeLifecycleOwner(getViewLifecycleOwner());
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
         viewModel.getWifiListLiveData().
                 observe(getViewLifecycleOwner(), wifiList -> {
-                    viewModel.getWifiListAdapter().setData(wifiList);
+                    wifiListAdapter.setData(wifiList);
                 });
         registerForContextMenu(binding.wifiListRecyclerView);
+
+        viewModel.getAscending().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean isAscending) {
+                wifiListAdapter.setSortByAscending(isAscending);
+            }
+        });
+        viewModel.getSortType().observe(getViewLifecycleOwner(), new Observer<WifiSortType>() {
+            @Override
+            public void onChanged(WifiSortType wifiSortType) {
+                wifiListAdapter.setSortType(wifiSortType);
+            }
+        });
 
         requestPermissions();
     }
@@ -85,10 +102,10 @@ public class WifiListFragment extends Fragment {
     public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        if(viewModel.getContextClickItem() == null)
+        if(wifiListAdapter.getContextClickItem() == null)
             return;
 
-        if(Boolean.TRUE.equals(viewModel.getContextClickItem().getIsTracked().getValue()))
+        if(Boolean.TRUE.equals(wifiListAdapter.getContextClickItem().getIsTracked().getValue()))
             new MenuInflater(getContext()).inflate(R.menu.wifi_action_tracked_menu, menu);
         else
             new MenuInflater(getContext()).inflate(R.menu.wifi_action_menu, menu);
@@ -100,10 +117,10 @@ public class WifiListFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case (R.id.action_start_tracking):
-                viewModel.startTrackingSelectedItem();
+                viewModel.startTrackingSelectedItem(wifiListAdapter.getContextClickItem());
                 break;
             case (R.id.action_stop_tracking):
-                viewModel.stopTrackingSelectedItem();
+                viewModel.stopTrackingSelectedItem(wifiListAdapter.getContextClickItem());
         }
         return true;
     }

@@ -4,8 +4,11 @@ import android.app.Application;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Room;
 
 import com.google.gson.Gson;
@@ -17,11 +20,13 @@ import com.nstu.geolocationwificlient.data.WifiSignals;
 import com.nstu.geolocationwificlient.db.AppDatabase;
 import com.nstu.geolocationwificlient.listeners.IWifiTrackedChangeListener;
 import com.nstu.geolocationwificlient.network.NetworkService;
+import com.nstu.geolocationwificlient.ui.fragment.wifilist.WifiSortType;
 import com.nstu.geolocationwificlient.wifi.scanner.WifiScanner;
 
 import java.util.AbstractMap;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,12 +36,16 @@ public class App extends Application {
     private Thread currentScanThread;
     private WifiScanner mWifiScanner;
     private DataRepository mDataRepository;
-    private String  mac;
+    private String mac;
     private AppDatabase mAppDatabase;
     private Date dateOfStart;
     private HashMap<String, WifiSignals> mTrackedBssidSet;
     private IWifiTrackedChangeListener IWifiTrackedChangeListener;
     private String androidId;
+    private MutableLiveData<WifiSortType> mSortType = new MutableLiveData<>(WifiSortType.SSID);
+    private MutableLiveData<Boolean> mAscending = new MutableLiveData<>(true);
+    private final Object lock = new Object();
+
     private final Gson gson = new GsonBuilder().create();
 
     @Override
@@ -57,6 +66,13 @@ public class App extends Application {
                 mAppDatabase,
                 mWifiScanner,
                 mTrackedBssidSet);
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("App", "" + mAppDatabase.resultWifiScanDao().getCount());
+            }
+        });
+
 
         mac = Utils.getMACAddress("wlan0");
 
@@ -102,6 +118,9 @@ public class App extends Application {
             @Override
             public void onResponse(@NonNull Call<ResultWifiScan> call, @NonNull Response<ResultWifiScan> response) {
                 if (response.isSuccessful()) {
+                    new Thread(() ->
+                            retryPostResultWifiScan(mAppDatabase.resultWifiScanDao().getOne()))
+                            .start();
                     return;
                 }
                 saveResultToDatabase(resultWifiScan);
@@ -125,6 +144,33 @@ public class App extends Application {
         mWifiScanner.setIsRunning(false);
     }
 
+    private void retryPostResultWifiScan(List<SavedResultWifiScan> list) {
+        if (list.size() == 0)
+            return;
+
+        SavedResultWifiScan savedResultWifiScan = list.get(0);
+
+        Call<String> call = NetworkService.getInstance()
+                .getSavedResultWifiScanApi()
+                .postSavedResultWifiScan(savedResultWifiScan.getResultWifiScan());
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    new Thread(() -> {
+                        deleteFromDatabase(savedResultWifiScan);
+                        retryPostResultWifiScan(mAppDatabase.resultWifiScanDao().getOne());
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Log.d("App", "saveResultToDatabase: failure");
+            }
+        });
+    }
+
     public void addTrackedBssid(String bssid) {
         WifiSignals wifiSignals = new WifiSignals();
         mTrackedBssidSet.put(bssid, wifiSignals);
@@ -144,10 +190,37 @@ public class App extends Application {
     }
 
     private void saveResultToDatabase(ResultWifiScan resultWifiScan) {
-        AppExecutors.getInstance().diskIO().execute(() ->
-                mAppDatabase.resultWifiScanDao()
-                        .insertAll(new SavedResultWifiScan(gson.toJson(resultWifiScan))));
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            String json = gson.toJson(resultWifiScan);
+            mAppDatabase.resultWifiScanDao()
+                    .insertAll(new SavedResultWifiScan(json));
+            Log.d("App", "saveResultToDatabase: success" + json);
+        });
     }
+
+    private void deleteFromDatabase(SavedResultWifiScan savedResultWifiScan) {
+        Log.d("App", "deleteFromDatabase");
+        AppExecutors.getInstance().diskIO().execute(() -> {
+            mAppDatabase.resultWifiScanDao().delete(savedResultWifiScan);
+        });
+
+    }
+    public void setAscending(boolean ascending) {
+        mAscending.setValue(ascending);
+    }
+
+    public LiveData<Boolean> getAscending() {
+        return mAscending;
+    }
+
+    public void setSortType(WifiSortType sortType) {
+        mSortType.setValue(sortType);
+    }
+
+    public LiveData<WifiSortType> getSortType() {
+        return mSortType;
+    }
+
 }
 
 

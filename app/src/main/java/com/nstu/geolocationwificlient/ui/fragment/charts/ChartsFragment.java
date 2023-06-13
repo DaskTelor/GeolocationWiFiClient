@@ -59,11 +59,11 @@ public class ChartsFragment extends Fragment {
         // enable scaling and dragging
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
-
-        final TypedValue value = new TypedValue ();
-
-        Objects.requireNonNull(getContext()).getTheme().resolveAttribute (androidx.appcompat.R.attr.background, value, true);
-        chart.setGridBackgroundColor(value.data);
+        {
+            final TypedValue value = new TypedValue ();
+            Objects.requireNonNull(getContext()).getTheme().resolveAttribute (androidx.appcompat.R.attr.background, value, true);
+            chart.setGridBackgroundColor(value.data);
+        }
 
         // if disabled, scaling can be done on x- and y-axis separately
         chart.setPinchZoom(false);

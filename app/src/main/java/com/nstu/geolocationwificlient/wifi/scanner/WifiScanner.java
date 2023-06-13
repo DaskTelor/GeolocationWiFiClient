@@ -18,14 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WifiScanner extends BroadcastReceiver implements Runnable{
-
-    private final String LogWifiScanner = "WifiScanner";
     private static WifiScanner mInstance;
     private final WifiManager mWifiManager;
     private final MutableLiveData<Boolean> mIsRunningLiveData;
     private final MutableLiveData<List<Wifi>> mWifiListLiveData;
     private final ArrayList<Wifi> mWifiList;
-    private final int mDelay;
+    private final int mDelay = 1000;
     private final HashMap<String, WifiSignals> mTrackedBssidSet;
 
     private WifiScanner(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
@@ -33,20 +31,31 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
         mWifiList = new ArrayList<>();
         mIsRunningLiveData = new MutableLiveData<>(false);
         mWifiManager = wifiManager;
-        mDelay = 1000;
         mWifiListLiveData.postValue(this.mWifiList);
         mTrackedBssidSet = trackedBssid;
     }
-
+    public static WifiScanner getInstance() {
+        if (mInstance == null) {
+            throw new NullPointerException();
+        }
+        return mInstance;
+    }
+    public static WifiScanner createInstance(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
+        if (mInstance == null) {
+            synchronized (WifiScanner.class) {
+                if (mInstance == null) {
+                    mInstance = new WifiScanner(wifiManager, trackedBssid);
+                }
+            }
+        }
+        return mInstance;
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         if(Boolean.FALSE.equals(mIsRunningLiveData.getValue()))
             return;
-        Log.d(LogWifiScanner, "OnReceive");
-        if(updateScanResults())
-        {
-            Log.d(LogWifiScanner, "Update");
-            this.mWifiListLiveData.postValue(mWifiList);
+        if(updateScanResults()) {
+            mWifiListLiveData.postValue(mWifiList);
         }
     }
     private boolean updateScanResults() {
@@ -56,7 +65,6 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
             try {
                 scanResults = mWifiManager.getScanResults();
             }catch (SecurityException securityException){
-                Log.d(LogWifiScanner, "securityException");
                 return false;
             }
 
@@ -75,9 +83,9 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
                         break;
                     }
                 }
-            } else
+            } else{
                 prevEquals = false;
-
+            }
             if(!prevEquals){
                 mWifiList.clear();
                 mWifiList.addAll(newWifiList);
@@ -88,27 +96,10 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
                 if(mTrackedBssidSet.containsKey(wifi.getBSSID()))
                     wifi.setIsTracked(true);
             }
-
             return !prevEquals;
         }
     }
 
-    public static WifiScanner getInstance() {
-        if (mInstance == null) {
-            throw new NullPointerException();
-        }
-        return mInstance;
-    }
-    public static WifiScanner createInstance(WifiManager wifiManager, HashMap<String, WifiSignals> trackedBssid) {
-        if (mInstance == null) {
-            synchronized (WifiScanner.class) {
-                if (mInstance == null) {
-                    mInstance = new WifiScanner(wifiManager, trackedBssid);
-                }
-            }
-        }
-        return mInstance;
-    }
 
     public LiveData<List<Wifi>> getWifiListLiveData() {
         return mWifiListLiveData;
@@ -120,7 +111,6 @@ public class WifiScanner extends BroadcastReceiver implements Runnable{
     public void setIsRunning(boolean value){
         mIsRunningLiveData.setValue(value);
     }
-
     @Override
     public void run() {
         while(!Thread.currentThread().isInterrupted()) {

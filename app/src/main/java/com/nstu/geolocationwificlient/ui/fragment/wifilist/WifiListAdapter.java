@@ -1,6 +1,7 @@
 package com.nstu.geolocationwificlient.ui.fragment.wifilist;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -8,12 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.data.Wifi;
 import com.nstu.geolocationwificlient.databinding.WifiItemBinding;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -27,29 +30,35 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
     private final MutableLiveData<LifecycleOwner> mLifecycleOwnerLiveData = new MutableLiveData<>();
 
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void setData(List<Wifi> data) {
-        mItems.clear();
-        mItems.addAll(data);
 
+    public void setData(List<Wifi> data) {
+        List<Wifi> newWifiList = new ArrayList<>(data);
+
+        sort(newWifiList);
+
+        final WifiDiffCallback diffCallback = new WifiDiffCallback(mItems, newWifiList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        mItems.clear();
+        mItems.addAll(newWifiList);
+
+        diffResult.dispatchUpdatesTo(this);
+    }
+    public void sort(List<Wifi> data){
         switch(mSortType){
             case SSID:
-                mItems.sort(Comparator.comparing(Wifi::getSSID));
+                data.sort(Comparator.comparing(Wifi::getSSID));
                 break;
             case BSSID:
-                mItems.sort(Comparator.comparing(Wifi::getBSSID));
+                data.sort(Comparator.comparing(Wifi::getBSSID));
                 break;
             case LEVEL:
-                mItems.sort(Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
+                data.sort(Comparator.comparingInt((Wifi o) -> o.getLevel().size() > 0 ? o.getLevel().get(0) : 0));
                 break;
         }
-
         if (!mSortByAscending)
-            Collections.reverse(mItems);
-
-        this.notifyDataSetChanged();
+            Collections.reverse(data);
     }
-
     @NonNull
     @Override
     public WifiHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -87,6 +96,17 @@ public class WifiListAdapter extends RecyclerView.Adapter<WifiListAdapter.WifiHo
     }
     public void changeLifecycleOwner(LifecycleOwner lifecycleOwner){
         mLifecycleOwnerLiveData.setValue(lifecycleOwner);
+    }
+
+    public void setSortByAscending(boolean sortByAscending) {
+        mSortByAscending = sortByAscending;
+        sort(mItems);
+        notifyDataSetChanged();
+    }
+    public void setSortType(WifiSortType sortType) {
+        mSortType = sortType;
+        sort(mItems);
+        notifyDataSetChanged();
     }
 
     static class WifiHolder extends RecyclerView.ViewHolder{

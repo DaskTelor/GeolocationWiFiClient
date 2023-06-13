@@ -14,41 +14,39 @@ import com.nstu.geolocationwificlient.data.Wifi;
 import java.util.List;
 
 public class WifiListViewModel extends AndroidViewModel {
-    private final WifiListAdapter mWifiListAdapter;
     private final DataRepository mDataRepository;
+    private final App mApp;
 
     public WifiListViewModel(@NonNull Application application) {
         super(application);
 
+        mApp = (App) application;
         mDataRepository = DataRepository.getInstance();
-        mWifiListAdapter = new WifiListAdapter();
+
     }
 
-    public WifiListAdapter getWifiListAdapter() {
-        return mWifiListAdapter;
-    }
-    public void setLifecycleOwner(LifecycleOwner lifecycleOwner){
-        mWifiListAdapter.changeLifecycleOwner(lifecycleOwner);
-    }
 
     public LiveData<List<Wifi>> getWifiListLiveData() {
         return mDataRepository.getWifiList();
-    }
-    public Wifi getContextClickItem(){
-        return mWifiListAdapter.getContextClickItem();
     }
     public void stopScan(){
         ((App)getApplication()).stopWifiScan();
     }
 
-    public void startTrackingSelectedItem(){
-        getContextClickItem().setIsTracked(true);
+    public void startTrackingSelectedItem(Wifi wifi){
+        wifi.setIsTracked(true);
 
-        ((App)getApplication()).addTrackedBssid(getContextClickItem().getBSSID());
+        ((App)getApplication()).addTrackedBssid(wifi.getBSSID());
     }
-    public void stopTrackingSelectedItem(){
-        getContextClickItem().setIsTracked(false);
+    public void stopTrackingSelectedItem(Wifi wifi){
+        wifi.setIsTracked(false);
 
-        ((App)getApplication()).removeTrackedBssid(getContextClickItem().getBSSID());
+        ((App)getApplication()).removeTrackedBssid(wifi.getBSSID());
+    }
+    public LiveData<Boolean> getAscending(){
+        return mApp.getAscending();
+    }
+    public LiveData<WifiSortType> getSortType(){
+        return mApp.getSortType();
     }
 }

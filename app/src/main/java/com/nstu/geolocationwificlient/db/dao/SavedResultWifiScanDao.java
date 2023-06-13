@@ -19,4 +19,6 @@ public interface SavedResultWifiScanDao {
     List<SavedResultWifiScan> getAll();
     @Query("SELECT * FROM savedresultwifiscan LIMIT 1")
     List<SavedResultWifiScan> getOne();
+    @Query("SELECT COUNT(*) FROM savedresultwifiscan")
+    int getCount();
 }

@@ -12,4 +12,8 @@
         <item name="colorPrimarySurface">@color/white</item>
         <item name="colorSurfaceVariant">@color/apricot</item>
     </style>
+    <style name="AlertDialogCustom" parent="Theme.Material3.DayNight.Dialog.Alert">
+        <item name="android:textSize">24sp</item>
+        <item name="colorPrimary">@color/orange</item>
+    </style>
 </resources>

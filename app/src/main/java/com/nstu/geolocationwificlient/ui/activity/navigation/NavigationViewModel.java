@@ -16,8 +16,6 @@ public class NavigationViewModel extends AndroidViewModel{
     private final WifiScanner mWifiScanner;
     private final DataRepository mDataRepository;
     private final App mApp;
-    private MutableLiveData<WifiSortType> mSortType = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mAscending = new MutableLiveData<>();
 
     public NavigationViewModel(@NonNull Application application) {
         super(application);
@@ -25,7 +23,6 @@ public class NavigationViewModel extends AndroidViewModel{
         mDataRepository = DataRepository.getInstance();
         mApp = (App) application;
     }
-
 
     public void stopWifiScanner(){
         mApp.stopWifiScan();
@@ -38,15 +35,15 @@ public class NavigationViewModel extends AndroidViewModel{
     }
 
     public void setAscending(boolean ascending) {
-        mAscending.setValue(ascending);
+        mApp.setAscending(ascending);
     }
     public LiveData<Boolean> getAscending(){
-        return mAscending;
+        return mApp.getAscending();
     }
     public void setSortType(WifiSortType sortType) {
-        mSortType.setValue(sortType);
+        mApp.setSortType(sortType);
     }
     public LiveData<WifiSortType> getSortType(){
-        return mSortType;
+        return mApp.getSortType();
     }
 }

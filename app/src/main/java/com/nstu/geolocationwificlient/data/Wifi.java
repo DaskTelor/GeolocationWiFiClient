@@ -14,33 +14,24 @@ import java.util.Objects;
 
 public class Wifi  {
     @SerializedName("ch")
-    @Expose
     private final int channelNumber;
     @SerializedName("mac")
-    @Expose
     private final String bssid;
     @SerializedName("packet_count")
     private final int packetCount;
     @SerializedName("type_bitmask")
-    @Expose
     private final byte typeBitmask;
     @SerializedName("timestamp")
-    @Expose
     private final long timestamp;
     @SerializedName("rssi_array")
-    @Expose
     private final List<Integer> level;
     @SerializedName("ssid")
-    @Expose
     private final String ssid;
     @SerializedName("distance_array")
-    @Expose
     private final List<Integer> distance;
     @SerializedName("radarDataId")
-    @Expose
     private final int  radarId;
-    @Expose(serialize = false, deserialize = false)
-    private final MutableLiveData<Boolean> mIsTracked = new MutableLiveData<>(false);
+    private transient final MutableLiveData<Boolean> mIsTracked = new MutableLiveData<>(false);
     public Wifi(int channelNumber,
                 String bssid,
                 int packetCount,

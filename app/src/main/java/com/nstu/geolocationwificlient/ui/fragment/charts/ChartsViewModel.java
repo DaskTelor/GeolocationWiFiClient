@@ -28,7 +28,6 @@ public class ChartsViewModel extends AndroidViewModel {
         super(application);
 
         dataRepository = DataRepository.getInstance();
-
     }
     private LineDataSet createLineDataset(String title, WifiSignals data){
         ArrayList<Entry> values = new ArrayList<>();

@@ -17,7 +17,7 @@ public class Utils {
 
     /**
      * Get unique Android Id.
-     * @param context
+     * @param context for get AndroidId
      * @return androidId
      */
     public static String getAndroidId(Context context){

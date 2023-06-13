@@ -2,6 +2,8 @@ package com.nstu.geolocationwificlient.ui.activity.navigation;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.nstu.geolocationwificlient.R;
 import com.nstu.geolocationwificlient.databinding.ActivityNavigationBinding;
 import com.nstu.geolocationwificlient.databinding.DialogSortWifiListBinding;
+import com.nstu.geolocationwificlient.ui.fragment.wifilist.WifiSortType;
 
 import java.util.Objects;
 
@@ -59,13 +62,41 @@ public class NavigationActivity extends AppCompatActivity {
         binding.fabSort.setOnClickListener(view -> {
             DialogSortWifiListBinding dialogBinding = DialogSortWifiListBinding.inflate(getLayoutInflater());
 
+            switch (Objects.requireNonNull(viewModel.getSortType().getValue())){
+                case BSSID:
+                    dialogBinding.spinnerWifiSort.setSelection(0);
+                    break;
+                case SSID:
+                    dialogBinding.spinnerWifiSort.setSelection(1);
+                    break;
+                case LEVEL:
+                    dialogBinding.spinnerWifiSort.setSelection(2);
+            }
 
+            if (Boolean.TRUE.equals(viewModel.getAscending().getValue()))
+                dialogBinding.radioAscending.toggle();
+            else
+                dialogBinding.radioDescending.toggle();
 
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom))
                     .setTitle(R.string.title_sort_wifi_list)
                     .setView(dialogBinding.getRoot())
+                    .setCancelable(true)
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
 
+                        viewModel.setAscending(dialogBinding.radioAscending.isChecked());
+
+                        switch(dialogBinding.spinnerWifiSort.getSelectedItemPosition()){
+                            case 0:
+                                viewModel.setSortType(WifiSortType.BSSID);
+                                break;
+                            case 1:
+                                viewModel.setSortType(WifiSortType.SSID);
+                                break;
+                            case 2:
+                                viewModel.setSortType(WifiSortType.LEVEL);
+                        }
+                        Log.d("WifiListAdapter", "Hello 1");
                     })
                     .create()
                     .show();
