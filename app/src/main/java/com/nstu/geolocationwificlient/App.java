@@ -166,7 +166,6 @@ public class App extends Application {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                Log.d("App", "saveResultToDatabase: failure");
             }
         });
     }
@@ -194,12 +193,10 @@ public class App extends Application {
             String json = gson.toJson(resultWifiScan);
             mAppDatabase.resultWifiScanDao()
                     .insertAll(new SavedResultWifiScan(json));
-            Log.d("App", "saveResultToDatabase: success" + json);
         });
     }
 
     private void deleteFromDatabase(SavedResultWifiScan savedResultWifiScan) {
-        Log.d("App", "deleteFromDatabase");
         AppExecutors.getInstance().diskIO().execute(() -> {
             mAppDatabase.resultWifiScanDao().delete(savedResultWifiScan);
         });
