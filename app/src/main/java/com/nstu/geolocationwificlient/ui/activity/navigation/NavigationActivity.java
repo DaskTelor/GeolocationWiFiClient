@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -37,6 +38,14 @@ public class NavigationActivity extends AppCompatActivity {
 
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
+
+        viewModel.getUnpostedCount().observe(this, new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                binding.countUnpostedText.setText("" + integer);
+            }
+        });
+
 
         Objects.requireNonNull(getSupportActionBar()).hide();
 
@@ -96,7 +105,6 @@ public class NavigationActivity extends AppCompatActivity {
                             case 2:
                                 viewModel.setSortType(WifiSortType.LEVEL);
                         }
-                        Log.d("WifiListAdapter", "Hello 1");
                     })
                     .create()
                     .show();

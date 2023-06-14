@@ -7,7 +7,7 @@
     tools:context=".ui.fragment.charts.ChartsFragment">
 
     <com.github.mikephil.charting.charts.LineChart
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="14dp"
         android:id="@+id/chartWifiLevels"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

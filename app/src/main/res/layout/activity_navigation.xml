@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <fragment
             android:id="@+id/nav_host_fragment_activity_bottom_navigation"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -32,6 +33,14 @@
             android:background="?colorPrimarySurface"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/bottom_nav_menu" />
+
+        <TextView
+            android:id="@+id/count_unposted_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment_activity_bottom_navigation"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab_sort"

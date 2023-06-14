@@ -1,5 +1,6 @@
 package com.nstu.geolocationwificlient.db.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -20,5 +21,5 @@ public interface SavedResultWifiScanDao {
     @Query("SELECT * FROM savedresultwifiscan LIMIT 1")
     List<SavedResultWifiScan> getOne();
     @Query("SELECT COUNT(*) FROM savedresultwifiscan")
-    int getCount();
+    LiveData<Integer> getCountLiveData();
 }

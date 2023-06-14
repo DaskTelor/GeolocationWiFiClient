@@ -9,6 +9,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.room.Room;
 
 import com.google.gson.Gson;
@@ -66,12 +67,6 @@ public class App extends Application {
                 mAppDatabase,
                 mWifiScanner,
                 mTrackedBssidSet);
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("App", "" + mAppDatabase.resultWifiScanDao().getCount());
-            }
-        });
 
 
         mac = Utils.getMACAddress("wlan0");
@@ -107,6 +102,13 @@ public class App extends Application {
 
         IntentFilter intentFilter = new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
         this.registerReceiver(mWifiScanner, intentFilter);
+
+        getUnpostedCount().observeForever(new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                Log.d("App", "" + integer);
+            }
+        });
     }
 
 
@@ -163,7 +165,6 @@ public class App extends Application {
                     }).start();
                 }
             }
-
             @Override
             public void onFailure(Call<String> call, Throwable t) {
             }
@@ -216,6 +217,9 @@ public class App extends Application {
 
     public LiveData<WifiSortType> getSortType() {
         return mSortType;
+    }
+    public LiveData<Integer> getUnpostedCount(){
+        return mAppDatabase.resultWifiScanDao().getCountLiveData();
     }
 
 }

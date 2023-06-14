@@ -46,4 +46,7 @@ public class NavigationViewModel extends AndroidViewModel{
     public LiveData<WifiSortType> getSortType(){
         return mApp.getSortType();
     }
+    public LiveData<Integer> getUnpostedCount(){
+        return mApp.getUnpostedCount();
+    }
 }
